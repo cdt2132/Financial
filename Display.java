@@ -1,3 +1,7 @@
+/*Caroline Trimble*/
+/*Financial Software Systems*/
+/*GUI Display for Trade Capture System using swing */
+
 import java.awt.GridLayout;
 import javax.swing.*;
 import java.util.Calendar; 
