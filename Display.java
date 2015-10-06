@@ -70,28 +70,34 @@ class Display {
             			result = JOptionPane.showConfirmDialog(null, panel, "Trade Capture   System",
             			JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         			}
-        		else{	
-        			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        			Calendar cal = Calendar.getInstance();
-        			System.out.println(dateFormat.format(cal.getTime())); //2014/08/06 16:00:22
-        			System.out.println(symbol.getText() + " "
-        				+ contractEx.getText() + " " 
-        				+ lots.getText() + " " 
-        				+ combo.getSelectedItem() + " " 
-        				+ price.getText() + " " 
-        				+ trader.getText());
-        			}
-        		symbol.setText(""); 
-    			contractEx.setText("");
-    			lots.setText("");
-    			price.setText(""); 
-    			trader.setText("");
-        		result = JOptionPane.showConfirmDialog(null, panel, "Trade Capture   System",
-        		JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-    			}
-  
-    		}
+        			else{	
+        				int l = 0; 
+					double p = 0.0; 
+					try {
+   						 l = Integer.parseInt(lots.getText());
+  					} catch (NumberFormatException e) {
+    					JOptionPane.showMessageDialog(panel, "Please enter an integer for lots."); 
+  					}
+					try{
+						p = Double.parseDouble(price.getText());
+					} catch(NumberFormatException e){
+						JOptionPane.showMessageDialog(panel, "Please enter number for price.");
+					}
+					Order o = new Order(symbol.getText(), contractEx.getText(), l, p, (String)combo.getSelectedItem(), trader.getText()); 
+					o.printOrder(); 
+			
 
+        				symbol.setText(""); 
+    					contractEx.setText("");
+    					lots.setText("");
+    					price.setText(""); 
+    					trader.setText("");
+        				result = JOptionPane.showConfirmDialog(null, panel, "Trade Capture System",
+        				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    				}
+    			}
+
+		}
 	}
 }
 
