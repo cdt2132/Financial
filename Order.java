@@ -13,8 +13,10 @@ public class Order{
 
 	/** The symbol, like "HH" for the order */
 	String symbol;
-	/** The date that the contract expires */
-	String contractEx;
+	/** The month that the contract expires */
+	int expMonth;
+	/** The year that the contract expires */ 
+	int expYear;
 	/** Number of lots bought or sold */
 	int lots; 
 	/** Price per lot */
@@ -26,9 +28,10 @@ public class Order{
 
 	
 	/* The construction for an order simply assigns the parameters to the variables*/
-	public Order(String s, String c, int l, double p, String b, String t){
+	public Order(String s, int m, int y, int l, double p, String b, String t){
 		symbol = s; 
-		contractEx = c; 
+		expMonth = m; 
+		expYear = y;  
 		lots = l; 
 		price = p; 
 		buySell = b; 
@@ -41,7 +44,7 @@ public class Order{
 		Calendar cal = Calendar.getInstance();
 		System.out.println(dateFormat.format(cal.getTime())); //2014/08/06 16:00:22
 		System.out.println(symbol + " "
-                                          + contractEx + " "
+                                          + expMonth + " " + expYear + " " 
                                           + lots + " "
                                           + price + " "
                                           + buySell + " "
