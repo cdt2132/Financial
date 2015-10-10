@@ -45,7 +45,10 @@ public class Display {
 				}
 			);
 		JTextField symbol = new JTextField();
-		JTextField contractEx = new JTextField();
+		Integer[] months = {1,2,3,4,5,6,7,8,8,10,11,12};
+		JComboBox<Integer> month = new JComboBox<Integer>(months); 
+		Integer[] years = {2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026};
+		JComboBox<Integer> year = new JComboBox<Integer>(years);
 		JTextField lots = new JTextField();
 		JTextField price = new JTextField();
 		String[] items = {"Buy", "Sell"};
@@ -56,8 +59,10 @@ public class Display {
 		panel.add(button);
 		panel.add(new JLabel("Symbol (e.g. HH):"));
 		panel.add(symbol);
-		panel.add(new JLabel("Contract Expiry (e.g. JUL 16):"));
-		panel.add(contractEx);
+		panel.add(new JLabel("Contract Expiry Month:")); 
+		panel.add(month); 
+		panel.add(new JLabel("Contract Expiry Year:")); 
+		panel.add(year); 
 		panel.add(new JLabel("Lots:"));
 		panel.add(lots);
 		panel.add(new JLabel("Price:"));
@@ -73,8 +78,7 @@ public class Display {
     		while(result != JOptionPane.CANCEL_OPTION){
     			if (result == JOptionPane.OK_OPTION) {
 			//If the user clicks ok: 
-        			if(symbol.getText().equals("") || 
-					contractEx.getText().equals("") || 
+        			if(symbol.getText().equals("") ||  
 					lots.getText().equals("") || 
 					price.getText().equals("") || 
 					trader.getText().equals("")){
@@ -101,13 +105,12 @@ public class Display {
 						JOptionPane.showMessageDialog(panel, "Please enter number for price.");
 					}
 					//Tries to parse the String price into a double; notifies if error
-					Order o = new Order(symbol.getText(), contractEx.getText(), l, p, (String)combo.getSelectedItem(), trader.getText());
+					Order o = new Order(symbol.getText(), (int)month.getSelectedItem(), (int)year.getSelectedItem(), l, p, (String)combo.getSelectedItem(), trader.getText());
 					//Creates a new order with the information user entered into GUI 
 					o.printOrder(); 
 					//For now, prints order info 
 
         				symbol.setText(""); 
-    					contractEx.setText("");
     					lots.setText("");
     					price.setText(""); 
     					trader.setText("");
