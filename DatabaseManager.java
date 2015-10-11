@@ -1,11 +1,9 @@
-import java.sql.*;  
-
-import javax.swing.JOptionPane;
+import java.sql.*;
 
 public  class DatabaseManager {
-	String url="jdbc:mysql://localhost/dbcourse";
+	String url="jdbc:mysql://csor4995.cy52ghsodz6n.us-west-2.rds.amazonaws.com";
 	String username="root";
-	String password="123456";
+	String password="12345678";
 	Connection con;
 	ResultSet rs;
 	ResultSetMetaData rsm;
@@ -14,9 +12,10 @@ public  class DatabaseManager {
 	public DatabaseManager()
 	{
 		try{
-			Class.forName( "org.gjt.mm.mysql.Driver" ); 
+			Class.forName( "com.mysql.jdbc.Driver" ); 
 			con= DriverManager.getConnection(url, username, password ); 
 			stmt=con.createStatement();
+			System.out.println("Connected!");
 		}
 		catch(Exception sqle)
 		{
@@ -28,7 +27,7 @@ public  class DatabaseManager {
 	{
 		try{
 			rs=stmt.executeQuery(strSQL);
-			rsm=rs.getMetaData();//ÐÂÌíµÄÒ»ÐÐ£¡£¡£¡£¡
+			rsm=rs.getMetaData();
 			return rs;
 		}
 		catch(SQLException sqle)
@@ -42,7 +41,7 @@ public  class DatabaseManager {
      {
       	try{
       		stmt.executeUpdate(strSQL);
-      		con.setAutoCommit(false);  ///????????
+      		con.setAutoCommit(false); 
       		con.commit();
               return true;	
       	}

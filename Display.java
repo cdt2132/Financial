@@ -13,9 +13,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+
 public class Display {
-	
-	public static void main(String[] args) {
+	public Display() {
 		JButton button = new JButton(); 
 		button.setText("Generate a Report"); 
 		//Creates a button to generate a report from the database 
@@ -122,6 +122,14 @@ public class Display {
     			}
 
 		}
+		
+	}
+
+	public static void main(String[] args) {
+		DatabaseManager db = new DatabaseManager();
+		Display disp = new Display();
+		db.getResult("select * fron order");
+
 	}
 }
 
