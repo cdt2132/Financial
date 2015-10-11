@@ -8,6 +8,7 @@
 import java.util.Calendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Order{
 
@@ -22,27 +23,28 @@ public class Order{
 	/** Price per lot */
 	double price; 
 	/** Whether the order was bought or sold */
-	String buySell;
-	/** The first and last name of the trader*/
-	String trader; 
-
+	int buySell;
+	/** The first and last name of the trader */
+	int trader;
+	/** The time the order is placed */
+	Date date;
 	
 	/* The construction for an order simply assigns the parameters to the variables*/
-	public Order(String s, int m, int y, int l, double p, String b, String t){
+	public Order(String s, int m, int y, int l, double p, int b, int t){
 		symbol = s; 
 		expMonth = m; 
 		expYear = y;  
 		lots = l; 
 		price = p; 
 		buySell = b; 
-		trader = t; 
+		trader = t;
+		date = new Date();
 	}
 
 	/*The print method prints the date and time of the order and all the information about the order*/
 	void printOrder(){
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		System.out.println(dateFormat.format(cal.getTime())); //2014/08/06 16:00:22
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println(dateFormat.format(date)); //2014/08/06 16:00:22
 		System.out.println(symbol + " "
                                           + expMonth + " " + expYear + " " 
                                           + lots + " "
