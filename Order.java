@@ -1,7 +1,7 @@
 /**The basic unit of this project, the order. Includes information 
 *like price, trader etc. and methods like print order
 *
-*@author Caroline Trimble 
+*@author Caroline Trimble, Kunal Jasty, Haoxiang Gao
 *@version 1 Build October 2015
 */ 
 
@@ -29,7 +29,7 @@ public class Order{
 	/** The time the order is placed */
 	Date date;
 	
-	/* The construction for an order simply assigns the parameters to the variables*/
+	/** Constructor for an order */
 	public Order(String s, int m, int y, int l, double p, int b, int t){
 		symbol = s; 
 		expMonth = m; 
@@ -41,15 +41,15 @@ public class Order{
 		date = new Date();
 	}
 
-	/*The print method prints the date and time of the order and all the information about the order*/
+	/** Prints the order */
 	void printOrder(){
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println(dateFormat.format(date)); //2014/08/06 16:00:22
 		System.out.println(symbol + " "
-                                          + expMonth + " " + expYear + " " 
-                                          + lots + " "
-                                          + price + " "
-                                          + buySell + " "
-                                          + trader);
+						 + expMonth + " " + expYear + " "
+						 + lots + " "
+						 + price + " "
+						 + buySell + " "
+						 + trader);
         }
 }
