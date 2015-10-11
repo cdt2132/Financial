@@ -14,14 +14,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+
 public class Display {
 
-	public static void main(String[] args) {
+	public Display() {
 		final DatabaseManager db = new DatabaseManager();
+		JButton button = new JButton(); 
+		button.setText("Generate a Report"); 
+		//Creates a button to generate a report from the database 
 
-		JButton button = new JButton();
-		button.setText("Generate a Report");
-		//Creates a button to generate a report from the database
 		button.addActionListener(
 		//The action performed if the user clicks the button to generate report:
 		new ActionListener() {
@@ -128,6 +129,14 @@ public class Display {
 			}
 
 		}
+		
+	}
+
+	public static void main(String[] args) {
+
+		Display disp = new Display();
+
+
 	}
 }
 

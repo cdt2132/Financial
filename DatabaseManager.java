@@ -13,21 +13,26 @@ public class DatabaseManager {
 	ResultSet rs;
 	ResultSetMetaData rsm;
 	Statement stmt;
-
-	public DatabaseManager() {
-		try {
-			Class.forName("org.gjt.mm.mysql.Driver");
-			con = DriverManager.getConnection(url, username, password);
-			stmt = con.createStatement();
-		} catch (Exception sqle) {
+	
+	public DatabaseManager()
+	{
+		try{
+			Class.forName( "com.mysql.jdbc.Driver" ); 
+			con= DriverManager.getConnection(url, username, password ); 
+			stmt=con.createStatement();
+			System.out.println("Connected!");
+		}
+		catch(Exception sqle)
+		{
 			System.out.println(sqle.toString());
 		}
 	}
-
-	public ResultSet getResult(String strSQL) {
-		try {
-			rs = stmt.executeQuery(strSQL);
-			rsm = rs.getMetaData();
+		
+	public ResultSet getResult(String strSQL)
+	{
+		try{
+			rs=stmt.executeQuery(strSQL);
+			rsm=rs.getMetaData();
 			return rs;
 		} catch (SQLException sqle) {
 			System.out.println(sqle.toString());
@@ -123,4 +128,5 @@ public class DatabaseManager {
 			System.out.println(sqle.toString());
 		}
 	}
+
 }
