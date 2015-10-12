@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.io.PrintWriter;
 import javax.swing.JOptionPane;
+import java.sql.Timestamp;
 
 /** DatabaseManager connects to AWS MySQL database to store trades */
 public class DatabaseManager {
@@ -102,10 +103,14 @@ public class DatabaseManager {
 	/**
 	 * Outputs a CSV file with all orders in the database
 	 */
-	public void outputTrades() {
+	public void outputTrades(String filePath) {
 		try {
 			// create new CSV file
-			PrintWriter writer = new PrintWriter("Trades.csv", "UTF-8");
+			// saves CSV file to directory specified by user with file name "timestamp + Trades.csv"
+			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(System.currentTimeMillis()));
+			String filename = filePath + "/" + timeStamp +"Trades.csv";
+			System.out.println(filename);
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			ResultSet rs = getResult("SELECT * FROM Orders");
 			writer.println("Symbol, orderTime, expMonth, expYear, lot, price, buy, trader");
 
@@ -131,10 +136,14 @@ public class DatabaseManager {
 
 	/** Output aggregate positions
 	 */
-	public void outputAggregate() {
+	public void outputAggregate(String filePath) {
 		try {
-			// create new CSV file
-			PrintWriter writer = new PrintWriter("Aggregate.csv", "UTF-8");
+			// create new CSV file 
+			// saves CSV file to directory specified by user with file name "timestamp + Aggregate.csv"
+			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(System.currentTimeMillis()));
+			String filename = filePath + "/" + timeStamp +"Aggregate.csv";
+			System.out.println(filename);
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			ResultSet rs = getResult("SELECT symbol, expMonth, expYear, SUM(buy*lot) FROM Orders GROUP BY symbol, expMonth, expYear");
 			writer.println("Symbol, expMonth, expYear, Aggregate");
 
