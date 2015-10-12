@@ -45,9 +45,9 @@ public class Display {
 					//Saves the filename 
 					String filename = s.getName(); 
 					
+					
 					System.out.println("CSV of Trades Entered");
-					System.out.println(filename);
-					db.outputTrades();
+					db.outputTrades(filename);
 				}
 
 				// CSV of aggregate positions
@@ -60,8 +60,7 @@ public class Display {
 					String filename = s.getName(); 
 					
 					System.out.println("CSV Showing Aggregate Positions");
-					System.out.println(filename);
-					db.outputAggregate();
+					db.outputAggregate(filename);
 				}
 			}
 		}
