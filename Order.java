@@ -29,7 +29,15 @@ public class Order{
 	/** The time the order is placed */
 	Date date;
 	
-	/** Constructor for an order */
+	/** Constructor for an order
+	 * @param s futures symbol (from CME)
+	 * @param m expiry month
+	 * @param y expiry year
+	 * @param l lot size
+	 * @param p future price
+	 * @param b buy or sell (1 or -1)
+	 * @param t trader id
+	 * */
 	public Order(String s, int m, int y, int l, double p, int b, int t){
 		symbol = s; 
 		expMonth = m; 

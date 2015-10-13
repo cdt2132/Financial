@@ -102,6 +102,7 @@ public class DatabaseManager {
 
 	/**
 	 * Outputs a CSV file with all orders in the database
+	 * @param filePath path to save trade report
 	 */
 	public void outputTrades(String filePath) {
 		try {
@@ -134,7 +135,9 @@ public class DatabaseManager {
 		}
 	}
 
-	/** Output aggregate positions
+	/**
+	 * Output aggregate positions
+	 * @param filePath path to save aggregate report
 	 */
 	public void outputAggregate(String filePath) {
 		try {
