@@ -144,7 +144,9 @@ public class Display {
 					int b = ((String) buySell.getSelectedItem()).equals("Buy") ? 1 : -1;
 
 					// Create a new order and insert into DB
-					Order o = new Order(symbol.getText(), (Integer) month.getSelectedItem(), (Integer) year.getSelectedItem(), l, p, b, Integer.parseInt(trader.getText()));
+					Order o = new Order(symbol.getText(), (Integer) month.getSelectedItem(),
+										(Integer) year.getSelectedItem(), l, p, b,
+										Integer.parseInt(trader.getText()));
 					o.printOrder();
 					db.insertOrder(o);
 

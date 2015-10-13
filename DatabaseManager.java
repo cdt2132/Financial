@@ -147,7 +147,9 @@ public class DatabaseManager {
 			String filename = filePath + "/" + timeStamp +"Aggregate.csv";
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
-			ResultSet rs = getResult("SELECT symbol, expMonth, expYear, SUM(buy*lot) FROM Orders GROUP BY symbol, expMonth, expYear");
+			ResultSet rs = getResult("SELECT symbol, expMonth, expYear, SUM(buy*lot) " +
+			"						  FROM Orders " +
+			"						  GROUP BY symbol, expMonth, expYear");
 			writer.println("Symbol, expMonth, expYear, Aggregate");
 
 			// print all aggregate positions in Orders table
