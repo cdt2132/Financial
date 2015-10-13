@@ -78,23 +78,23 @@ public class DatabaseManager {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		String strSQL = "INSERT INTO Orders("
-		+ "symbol, "
-		+ "ordertime, "
-		+ "expMonth, "
-		+ "expYear, "
-		+ "lot, "
-		+ "price, "
-		+ "buy, "
-		+ "trader) "
-		+ "VALUES ( "
-		+ "'" + o.symbol   + "', "
-		+ "'" + dateFormat.format(o.date) + "', "
-		+ o.expMonth + ", "
-		+ o.expYear  + ", "
-		+ o.lots     + ", "
-		+ o.price    + ", "
-		+ o.buySell  + ", "
-		+ o.trader   + ")";
+			+ "symbol, "
+			+ "ordertime, "
+			+ "expMonth, "
+			+ "expYear, "
+			+ "lot, "
+			+ "price, "
+			+ "buy, "
+			+ "trader) "
+			+ "VALUES ( "
+			+ "'" + o.symbol   + "', "
+			+ "'" + dateFormat.format(o.date) + "', "
+			+ o.expMonth + ", "
+			+ o.expYear  + ", "
+			+ o.lots     + ", "
+			+ o.price    + ", "
+			+ o.buySell  + ", "
+			+ o.trader   + ")";
 		System.out.println(strSQL);
 		if (updateSql(strSQL)) return true;
 		return false;
@@ -118,13 +118,13 @@ public class DatabaseManager {
 			// print all rows in Orders table
 			while (rs.next()) {
 				writer.println(rs.getString("symbol") 	 + ", "
-							 + rs.getString("ordertime") + ", "
+					     + rs.getString("ordertime") + ", "
 				             + rs.getString("expMonth")  + ", "
 				             + rs.getString("expYear")   + ", "
-							 + rs.getString("lot")       + ", "
-							 + rs.getString("price")     + ", "
-							 + rs.getString("buy")       + ", "
-							 + rs.getString("trader")    + ", "
+					     + rs.getString("lot")       + ", "
+					     + rs.getString("price")     + ", "
+					     + rs.getString("buy")       + ", "
+					     + rs.getString("trader")    + ", "
 				);
 			}
 			writer.close();
@@ -148,16 +148,16 @@ public class DatabaseManager {
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			ResultSet rs = getResult("SELECT symbol, expMonth, expYear, SUM(buy*lot) " +
-			"						  FROM Orders " +
-			"						  GROUP BY symbol, expMonth, expYear");
+						 "FROM Orders " +
+						 "GROUP BY symbol, expMonth, expYear");
 			writer.println("Symbol, expMonth, expYear, Aggregate");
 
 			// print all aggregate positions in Orders table
 			while (rs.next()) {
 				writer.println(rs.getString("symbol") 	 + ", "
-							 + rs.getString("expMonth")  + ", "
-							 + rs.getString("expYear")   + ", "
-							 + rs.getString("SUM(buy*lot)")
+					     + rs.getString("expMonth")  + ", "
+					     + rs.getString("expYear")   + ", "
+					     + rs.getString("SUM(buy*lot)")
 				);
 			}
 			writer.close();
