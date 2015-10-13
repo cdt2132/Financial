@@ -83,7 +83,7 @@ public class Display {
 
 		// Buy or Sell
 		String[] items = {"Buy", "Sell"};
-		JComboBox<String> combo = new JComboBox<String>(items);
+		JComboBox<String> buySell = new JComboBox<String>(items);
 
 		// Each trader will be assigned a unique id
 		JTextField trader = new JTextField();
@@ -101,7 +101,7 @@ public class Display {
 		panel.add(lots);
 		panel.add(new JLabel("Price:"));
 		panel.add(price);
-		panel.add(combo);
+		panel.add(buySell);
 		panel.add(new JLabel("Trader"));
 		panel.add(trader);
 		//Adds a label to each and then adds to panel
@@ -141,7 +141,7 @@ public class Display {
 						JOptionPane.showMessageDialog(panel, "Please enter number for price.");
 					}
 
-					int b = ((String) combo.getSelectedItem()).equals("Buy") ? 1 : -1;
+					int b = ((String) buySell.getSelectedItem()).equals("Buy") ? 1 : -1;
 
 					// Create a new order and insert into DB
 					Order o = new Order(symbol.getText(), (Integer) month.getSelectedItem(), (Integer) year.getSelectedItem(), l, p, b, Integer.parseInt(trader.getText()));
