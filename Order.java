@@ -53,11 +53,12 @@ public class Order{
 	void printOrder(){
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println(dateFormat.format(date)); //2014/08/06 16:00:22
-		System.out.println(symbol + " "
-						 + expMonth + " " + expYear + " "
-						 + lots + " "
-						 + price + " "
-						 + buySell + " "
-						 + trader);
+		System.out.println(symbol   + " "
+				 + expMonth + " " 
+				 + expYear  + " "
+				 + lots     + " "
+				 + price    + " "
+				 + buySell  + " "
+				 + trader);
         }
 }
