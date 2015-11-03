@@ -194,7 +194,7 @@ public class DatabaseManager {
 			String filename = filePath + "/" + timeStamp +"PnL.csv";
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
-
+			writer.println("Symbol, expMonth, expYear, purchasePrice, marketPrice, PnL");
 			ResultSet rs = getResult("SELECT symbol, AVG(price) as price FROM Orders GROUP BY symbol");
 
 			HashMap<String, Double> prices = new HashMap<String, Double>();
@@ -221,13 +221,21 @@ public class DatabaseManager {
 				double market_price = prices.get(symbol);
 				double pnl = market_price - price;
 
-				/*
+				writer.println(rs.getString("symbol") 	 + ", "
+							 + rs.getString("expMonth")  + ", "
+						     + rs.getString("expYear")   + ", "
+						     + rs.getString("price")	 + ", "
+							 + market_price				 + ", "
+				             + pnl						 + ", "
+				);
+
 				System.out.println(symbol + ":");
 				System.out.println("Price: " + price);
 				System.out.println("Market Price: " + market_price);
 				System.out.println("PnL: " + pnl + "\n");
-				*/
+
 			}
+			writer.close();
 		} catch (SQLException sqle) {
 			System.out.println(sqle.toString());
 		} catch(IOException e) {

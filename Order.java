@@ -61,4 +61,11 @@ public class Order{
 				 + buySell  + " "
 				 + trader);
         }
+
+	/** Sends the order to test exchange */
+	public void sendOrdertoExchange() {
+
+	}
+
+
 }

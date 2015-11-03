@@ -9,15 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import javax.swing.*;
-import java.util.Calendar;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 
 /** Creates a GUI used to enter trades and generate reports */
-public class Display {
+public class Display implements Runnable {
 
-	public Display() {
+	public void run() {
 
 		// Insert and query MySQL database
 		final DatabaseManager db = new DatabaseManager();
@@ -148,7 +145,8 @@ public class Display {
 										(Integer) year.getSelectedItem(), l, p, b,
 										Integer.parseInt(trader.getText()));
 					o.printOrder();
-					db.insertOrder(o);
+					//db.insertOrder(o);
+					//o.sendOrdertoExchange();
 
 					//Resets GUI
 					symbol.setText("");
@@ -160,12 +158,6 @@ public class Display {
 				}
 			}
 		}
-	}
-
-	/** Main function. Creates a GUI to enter trades */
-	public static void main(String[] args) {
-		Display disp = new Display();
-
 	}
 }
 
