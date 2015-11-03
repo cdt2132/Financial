@@ -69,6 +69,26 @@ public class DatabaseManager {
 		}
 	}
 
+	public void displayTrades() {
+		try {
+			ResultSet rs = getResult("SELECT * FROM Orders");
+			while (rs.next()) {
+				System.out.println(rs.getString("symbol") + ", "
+				+ rs.getString("ordertime") + ", "
+				+ rs.getString("expMonth") + ", "
+				+ rs.getString("expYear") + ", "
+				+ rs.getString("lot") + ", "
+				+ rs.getString("price") + ", "
+				+ rs.getString("buy") + ", "
+				+ rs.getString("trader") + ", "
+				);
+			}
+		} catch(SQLException sqle) {
+			System.out.println(sqle.toString());
+		}
+	}
+
+
 	/** Inserts an order into the database
 	 *
 	 * @param o An order to insert into the database
@@ -147,7 +167,7 @@ public class DatabaseManager {
 			String filename = filePath + "/" + timeStamp +"Aggregate.csv";
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
-			ResultSet rs = getResult("SELECT symbol, expMonth, expYear, SUM(buy*lot) " +
+			ResultSet rs = getResult("SELECT symbol, expMonth, expYear, SUM(buy*lot*price) " +
 			"						  FROM Orders " +
 			"						  GROUP BY symbol, expMonth, expYear");
 			writer.println("Symbol, expMonth, expYear, Aggregate");
@@ -157,7 +177,7 @@ public class DatabaseManager {
 				writer.println(rs.getString("symbol") 	 + ", "
 							 + rs.getString("expMonth")  + ", "
 							 + rs.getString("expYear")   + ", "
-							 + rs.getString("SUM(buy*lot)")
+							 + rs.getString("SUM(buy*lot*price)")
 				);
 			}
 			writer.close();
@@ -185,9 +205,11 @@ public class DatabaseManager {
 				double market_price = Market.genMarketData(avg_price);
 				prices.put(rs.getString("symbol"), market_price);
 
+				/*
 				System.out.println(symbol + ":");
 				System.out.println("Price: " + avg_price);
 				System.out.println("Market Price: " + market_price);
+				*/
 			}
 
 			rs = getResult("SELECT * FROM Orders");
