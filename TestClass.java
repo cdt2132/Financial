@@ -9,13 +9,18 @@ import java.sql.SQLException;
 public class TestClass {	
 	
 	public static void main(String[] args){
-		/** Test Order Class */
+
+
+		DatabaseManager db = new DatabaseManager();
+		db.PnL("./");
+
+		/*
 		Order ord = new Order("BB",10,2015,1,30.0, 1, 1);
 		ord.printOrder();
 		System.out.println("Order Class OK");
 		
-		/** Test DatabaseManager Class*/
-		DatabaseManager db = new DatabaseManager();
+
+
 		db.insertOrder(ord);
 		System.out.println("DatabaseManager->insertOrder OK");
 		db.getResult("SELECT * FROM Orders ORDER BY ordertime DESC LIMIT 1");
@@ -32,17 +37,18 @@ public class TestClass {
 		db.outputTrades("./");
 		System.out.println("DatabaseManager->outputTrades OK");
 		db.outputAggregate("./");
-		System.out.println("DatabaseManager->outputAggregate OK");		
-		
-		/** Test Save Dialog Class*/
+		System.out.println("DatabaseManager->outputAggregate OK");
+
+
+
 		SaveDialog svd = new SaveDialog();
 		System.out.println(svd.getName());
 		System.out.println("SaveDialog Class OK");
 		
-		/** Test Display Class */
+
 		Display disp = new Display();
 		System.out.println("Display class OK");
-		
+		*/
 	}
 
 }
