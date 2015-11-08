@@ -10,6 +10,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import quickfix.ConfigError;
+
 public class Order{
 
 	/** The symbol, like "HH" for the order */
@@ -62,10 +64,16 @@ public class Order{
 				 + trader);
         }
 
-	/** Sends the order to test exchange */
-	public void sendOrdertoExchange() {
-
+	/** Sends the order to test exchange 
+	 * @throws Throwable */
+	public void sendOrdertoExchange() throws Throwable {
+		try {
+			ClientInitiator fixInitiator = ClientInitiator.getInstance();
+			fixInitiator.sendOrder(Integer.toString(trader), symbol, lots, price, buySell, expMonth, expYear);
+		} catch (ConfigError e) {
+			e.printStackTrace();
+		}
+		
 	}
-
 
 }

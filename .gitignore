@@ -6,3 +6,13 @@
 DatabaseManager.java
 /SaveDialog.class
 /TestClass.class
+
+*.csv
+/ExchangeListener.class
+/Market.class
+/TradeCapture.class
+/MyClass.class
+/FooApplication.class
+/Application.class
+/fooApplication.class
+/bin/

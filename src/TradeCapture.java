@@ -4,7 +4,7 @@
 public class TradeCapture {
 
 	public static void main(String[] args) {
-		(new Thread(new Display())).start();
 		(new Thread(new ExchangeListener())).start();
+		(new Thread(new Display())).start();
 	}
 }

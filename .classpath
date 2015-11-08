@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path=""/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/Haoxiang/Downloads/mysql-connector-java-5.1.36/mysql-connector-java-5.1.36-bin.jar"/>
 	<classpathentry kind="lib" path="/Users/Haoxiang/Financial/opencsv-3.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="output" path=""/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/quickfixj-all-1.6.0.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/jaxen-1.1.4.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/jcl-over-slf4j-1.7.12.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/je-2.1.30.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/mina-core-2.0.9.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/proxool-0.9.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/slf4j-api-1.7.12.jar"/>
+	<classpathentry kind="lib" path="/Users/Haoxiang/Desktop/org.quickfixj-1.6.0/lib/slf4j-jdk14-1.7.12.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

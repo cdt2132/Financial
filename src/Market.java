@@ -10,7 +10,6 @@ public class Market {
 	public static double genMarketData(double price) {
 
 		Random r = new Random();
-
 		// std = 25% of purchase price, marketprice normally distributed
 		double std = .25 * price;
 		return r.nextGaussian() * std + price;

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.sql.Timestamp;
 
 /** DatabaseManager connects to AWS MySQL database to store trades */
+/** This class is a singleton */
 public class DatabaseManager {
 	String url = "jdbc:mysql://csor4995.cy52ghsodz6n.us-west-2.rds.amazonaws.com/CSOR4995";
 	String username = "root";
@@ -22,10 +23,9 @@ public class DatabaseManager {
 	ResultSet rs;
 	ResultSetMetaData rsm;
 	Statement stmt;
-
-	/**  Connects to AWS MySQL database */
-	public DatabaseManager()
-	{
+	
+	private static DatabaseManager instance = null;
+	protected DatabaseManager() {
 		try{
 			Class.forName( "com.mysql.jdbc.Driver" ); 
 			con= DriverManager.getConnection(url, username, password ); 
@@ -37,6 +37,15 @@ public class DatabaseManager {
 			System.out.println(sqle.toString());
 		}
 	}
+	
+	public static DatabaseManager getInstance() {
+	      if(instance == null) {
+	         instance = new DatabaseManager();
+	      }
+	      return instance;
+	}
+
+	
 
 	/** Receive ResultSet
 	 * @param strSQL The sql query to evaluate (SELECT)
