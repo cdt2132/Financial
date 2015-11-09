@@ -13,8 +13,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.sql.Timestamp;
 
-/** DatabaseManager connects to AWS MySQL database to store trades */
-/** This class is a singleton */
+/** DatabaseManager is a singleton class that connects to AWS MySQL database to store trades */
 public class DatabaseManager {
 	String url = "jdbc:mysql://csor4995.cy52ghsodz6n.us-west-2.rds.amazonaws.com/CSOR4995";
 	String username = "root";

@@ -40,13 +40,6 @@ import quickfix.fix42.ExecutionReport;
 import quickfix.fix42.NewOrderSingle;
 import quickfix.fix42.News;
 
-/**
- * FIX protocol based server, which acts as the stock Exchange.
- * 
- * @author Deepak Singhvi
- *          
- * 
- */
 public class ExchangeAcceptor extends MessageCracker implements Application {
 
 	/**

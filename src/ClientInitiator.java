@@ -1,5 +1,3 @@
-
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -125,7 +123,7 @@ public class ClientInitiator extends ApplicationAdapter{
 				DateFormat df = new SimpleDateFormat("MM:yyyy");
 				expdat = df.parse(expdate.getValue());
 				int m = expdat.getMonth();
-				int y = expdat.getYear();
+				int y = expdat.getYear() + 1900;
 				int b = 0;
 				b = (side.getValue() == Side.BUY)?1:-1;
 				Order order = new Order(symbol.getValue(),m, y,(int)orderQty.getValue(),price.getValue(),b,Integer.parseInt(clientID.getValue()));
