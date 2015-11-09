@@ -1,5 +1,8 @@
 /**
- * Created by kunaljasty on 11/3/15.
+ * TradeCapture class that creates a new ExchangeListener and Display
+ *
+ * @author Caroline Trimble, Kunal Jasty, Haoxiang Gao
+ * @version 1 Build November 2015
  */
 public class TradeCapture {
 
