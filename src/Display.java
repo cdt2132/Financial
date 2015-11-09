@@ -1,4 +1,3 @@
-
 /**
  * Display Class creates the GUI for the Trade Capture System
  *
