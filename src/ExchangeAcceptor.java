@@ -1,4 +1,9 @@
-
+/**
+ * Exchange acceptor class fills orders
+ *
+ * @author Caroline Trimble, Kunal Jasty, Haoxiang Gao
+ * @version 1 Build November 2015
+ */
 import java.io.File;
 
 import quickfix.Application;
