@@ -135,13 +135,13 @@ public class Display implements Runnable {
 					}
 
 					int b = ((String) buySell.getSelectedItem()).equals("Buy") ? 1 : -1;
-
-					if((String) orderT.getSelectedItem()).equals("Market")){
-						int ot = 0;} 
-					else if((String orderT.getSelectedItem()).equals("Limit"))
-						int ot = 1; 
+					int ot; 
+					if(((String) orderT.getSelectedItem()).equals("Market") == true){
+						ot = 0;} 
+					else if(((String) orderT.getSelectedItem()).equals("Limit") == true)
+						ot = 1; 
 					else
-						int ot = 2; 
+						ot = 2; 
 					// Create a new order and insert into DB
 					Order o = new Order(symbol.getText(), (Integer) month.getSelectedItem(),
 							(Integer) year.getSelectedItem(), l, p, b, ot, Integer.parseInt(trader.getText()));
