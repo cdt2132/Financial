@@ -7,7 +7,10 @@ import quickfix.SessionSettings;
 import quickfix.SocketAcceptor;
 
 /**
- * Created by kunaljasty on 11/3/15.
+ * ExchangeListener Class - acts as exchange and listens for orders
+ *
+ * @author Caroline Trimble, Kunal Jasty, Haoxiang Gao
+ * @version 1 Build October 2015
  */
 public class ExchangeListener implements Runnable {
 
