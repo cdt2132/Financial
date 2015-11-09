@@ -14,10 +14,10 @@ public class TestClass {
 
 		DatabaseManager db = new DatabaseManager();
 		db.displayTrades();
-		Display disp = new Display();
+		Display disp1 = new Display();
 		
-		/*
-		Order ord = new Order("BB",10,2015,1,30.0, 1, 1);
+		
+		Order ord = new Order("BB",10,2015,1,30.0, 1,1,1);
 		ord.printOrder();
 		System.out.println("Order Class OK");
 		
@@ -50,7 +50,7 @@ public class TestClass {
 
 		Display disp = new Display();
 		System.out.println("Display class OK");
-		*/
+		
 	}
 
 }
