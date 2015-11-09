@@ -1,4 +1,5 @@
-/**The basic unit of this project, the order. Includes information 
+/*
+*The basic unit of this project, the order. Includes information 
 *like price, trader etc. and methods like print order
 *
 *@author Caroline Trimble, Kunal Jasty, Haoxiang Gao
@@ -26,6 +27,8 @@ public class Order{
 	double price; 
 	/** Whether the order was bought or sold */
 	int buySell;
+	/** Type of order */
+	int orderType;
 	/** The first and last name of the trader */
 	int trader;
 	/** The time the order is placed */
@@ -38,15 +41,17 @@ public class Order{
 	 * @param l lot size
 	 * @param p future price
 	 * @param b buy or sell (1 or -1)
+	 * @param ot order type (0,1,2)
 	 * @param t trader id
 	 * */
-	public Order(String s, int m, int y, int l, double p, int b, int t){
+	public Order(String s, int m, int y, int l, double p, int b, int ot, int t){
 		symbol = s; 
 		expMonth = m; 
 		expYear = y;  
 		lots = l; 
 		price = p; 
-		buySell = b; 
+		buySell = b;
+		orderType = ot;  
 		trader = t;
 		date = new Date();
 	}
