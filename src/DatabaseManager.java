@@ -236,11 +236,13 @@ public class DatabaseManager {
 							 + market_price				 + ", "
 				             + pnl						 + ", "
 				);
-
+				
+				/*
 				System.out.println(symbol + ":");
 				System.out.println("Price: " + price);
 				System.out.println("Market Price: " + market_price);
-				System.out.println("PnL: " + pnl + "\n");
+				System.out.println("PnL: " + pnl + "\n");	
+				*/
 
 			}
 			writer.close();
