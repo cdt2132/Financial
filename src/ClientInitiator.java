@@ -1,3 +1,10 @@
+/**
+ * Client Initiator Gets Order Information
+ *
+ * @author Caroline Trimble, Kunal Jasty, Haoxiang Gao
+ * @version 1 Build October 2015
+ */
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
