@@ -1,7 +1,9 @@
 /**
- * Created by kunaljasty on 11/2/15.
+ * Class that generates market data 
+ *
+ * @author Caroline Trimble, Kunal Jasty, Haoxiang Gao
+ * @version 1 Build November 2015
  */
-
 import java.util.Random;
 
 public class Market {
