@@ -74,6 +74,10 @@ public class Display implements Runnable {
 		String[] items = { "Buy", "Sell" };
 		JComboBox<String> buySell = new JComboBox<String>(items);
 
+		//Type of Order 
+		String[] orders = {"Market", "Limit", "Pegged"};
+		JComboBox<String> orderT = new JComboBox<String>(orders);
+
 		// Each trader will be assigned a unique id
 		JTextField trader = new JTextField();
 
@@ -91,6 +95,8 @@ public class Display implements Runnable {
 		panel.add(new JLabel("Price:"));
 		panel.add(price);
 		panel.add(buySell);
+		panel.add(new JLabel("Order Type:"));
+		panel.add(orderT);
 		panel.add(new JLabel("Trader"));
 		panel.add(trader);
 		// Adds a label to each and then adds to panel
@@ -130,9 +136,15 @@ public class Display implements Runnable {
 
 					int b = ((String) buySell.getSelectedItem()).equals("Buy") ? 1 : -1;
 
+					if((String) orderT.getSelectedItem()).equals("Market")){
+						int ot = 0;} 
+					else if((String orderT.getSelectedItem()).equals("Limit"))
+						int ot = 1; 
+					else
+						int ot = 2; 
 					// Create a new order and insert into DB
 					Order o = new Order(symbol.getText(), (Integer) month.getSelectedItem(),
-							(Integer) year.getSelectedItem(), l, p, b, Integer.parseInt(trader.getText()));
+							(Integer) year.getSelectedItem(), l, p, b, ot, Integer.parseInt(trader.getText()));
 					o.printOrder();
 					try {
 						o.sendOrdertoExchange();
