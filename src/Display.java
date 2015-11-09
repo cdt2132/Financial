@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import javax.swing.*;
 
+import com.sun.media.sound.Toolkit;
+
 import quickfix.ConfigError;
 
 /** Creates a GUI used to enter trades and generate reports */
@@ -25,7 +27,7 @@ public class Display implements Runnable {
 			public void actionPerformed(ActionEvent e) {
 				int result = JOptionPane.showOptionDialog(null, "What type of report would you like to produce?",
 						"Feedback", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-						new String[] { "CSV of Trades Entered", "CSV Showing Aggregate Positions" }, "default");
+						new String[] { "CSV of Trades Entered", "CSV Showing Aggregate Positions", "PnL Report" }, "default");
 
 				// CSV of trades entered
 				if (result == 0) {
@@ -51,8 +53,20 @@ public class Display implements Runnable {
 					System.out.println("CSV Showing Aggregate Positions");
 					db.outputAggregate(filename);
 				}
+				if (result == 2){
+					//New save dialog object created; displays window 
+					//for using to pick a directory to save PnL report 
+					
+					SaveDialog s = new SaveDialog(); 
+					
+					String filename = s.getName(); 
+					
+					System.out.println("PnL Report");
+					db.PnL(filename);
+				}
 			}
 		});
+		
 
 		// CME commodity symbol
 		JTextField symbol = new JTextField();
@@ -81,7 +95,7 @@ public class Display implements Runnable {
 		JTextField trader = new JTextField();
 
 		// Create fields and comboboxes
-		JPanel panel = new JPanel(new GridLayout(0, 1));
+		JPanel panel = new JPanel(new GridLayout(0, 1));		
 		panel.add(button);
 		panel.add(new JLabel("Symbol (e.g. HH):"));
 		panel.add(symbol);
