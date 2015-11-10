@@ -12,6 +12,9 @@ import java.text.SimpleDateFormat;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /** DatabaseManager is a singleton class that connects to AWS MySQL database to store trades */
 public class DatabaseManager {
@@ -202,22 +205,35 @@ public class DatabaseManager {
 			String filename = filePath + "/" + timeStamp +"PnL.csv";
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
-			writer.println("Symbol, expMonth, expYear, purchasePrice, marketPrice, PnL");
+			writer.println("Date, Trader, Symbol, expMonth, expYear, purchasePrice, marketPrice, PnL");
 			ResultSet rs = getResult("SELECT symbol, AVG(price) as price FROM Orders GROUP BY symbol");
-
+			
+			double totalPnL = 0;
+			HashMap<String, Double> symbolPnL = new HashMap<String, Double>();
 			HashMap<String, Double> prices = new HashMap<String, Double>();
-
+			HashMap<Integer, Double> traderPnL = new HashMap<Integer, Double>();
+			ArrayList<Trader> tsortedPnL = new ArrayList<Trader>();
+			ArrayList<Symbol> ssortedPnL = new ArrayList<Symbol>();
+			
+			Comparator<Trader> tcomparator = new Comparator<Trader>() {
+				public int compare(Trader t1, Trader t2) {
+					return t1.getPnL() < t2.getPnL() ? 1 : -1;
+				}
+			};
+			
+			Comparator<Symbol> scomparator = new Comparator<Symbol>() {
+				public int compare(Symbol s1, Symbol s2) {
+					return s1.getPnL() < s2.getPnL() ? 1 : -1;
+				}
+			};
+			
 			while (rs.next()) {
-				String symbol = rs.getString("symbol");
+				
 				double avg_price = rs.getDouble("price");
+				
 				double market_price = Market.genMarketData(avg_price);
 				prices.put(rs.getString("symbol"), market_price);
-
-				/*
-				System.out.println(symbol + ":");
-				System.out.println("Price: " + avg_price);
-				System.out.println("Market Price: " + market_price);
-				*/
+			
 			}
 
 			rs = getResult("SELECT * FROM Orders");
@@ -228,8 +244,24 @@ public class DatabaseManager {
 				double price = rs.getDouble("price");
 				double market_price = prices.get(symbol);
 				double pnl = market_price - price;
-
-				writer.println(rs.getString("symbol") 	 + ", "
+				totalPnL += pnl;
+				
+				int trader = rs.getInt("trader");
+				if (traderPnL.containsKey(trader)) {
+					traderPnL.put(trader, traderPnL.get(trader) + pnl);
+				} else {
+					traderPnL.put(trader, pnl);
+				}
+				
+				if (symbolPnL.containsKey(symbol)) {
+					symbolPnL.put(symbol, symbolPnL.get(symbol) + pnl);
+				} else {
+					symbolPnL.put(symbol, pnl);
+				}
+				
+				writer.println(rs.getString("ordertime")		 + ", "
+							 + rs.getString("trader")    + ", "
+							 + rs.getString("symbol") 	 + ", "
 							 + rs.getString("expMonth")  + ", "
 						     + rs.getString("expYear")   + ", "
 						     + rs.getString("price")	 + ", "
@@ -243,16 +275,47 @@ public class DatabaseManager {
 				System.out.println("Market Price: " + market_price);
 				System.out.println("PnL: " + pnl + "\n");	
 				*/
-
+				
 			}
+			writer.println();
+			
+			for (Integer traderId : traderPnL.keySet()) {
+				Trader newTrader = new Trader(traderId, traderPnL.get(traderId));
+				tsortedPnL.add(newTrader);
+			}
+			
+			for (String symbolId: symbolPnL.keySet()) {
+				Symbol newSymbol = new Symbol(symbolId, symbolPnL.get(symbolId));
+				ssortedPnL.add(newSymbol);
+			}
+			
+			Collections.sort(tsortedPnL, tcomparator);
+			Collections.sort(ssortedPnL, scomparator);
+			
+			writer.println("Trader, PnL");
+			for (Trader t : tsortedPnL) {
+				writer.println(t.getId() + ", " + t.getPnL());
+			}
+			writer.println();
+			writer.println("Symbol, PnL");
+			for (Symbol s : ssortedPnL) {
+				writer.println(s.getId() + ", " + s.getPnL());
+			}
+			
+			writer.println();
+			writer.println("TOTAL PNL: " + totalPnL);
+			
 			writer.close();
+			
+			
 		} catch (SQLException sqle) {
 			System.out.println(sqle.toString());
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	
 	/** Close connection to the database
 	 */
 	public void closeConnection() {
