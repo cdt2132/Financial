@@ -37,6 +37,7 @@ import quickfix.field.OrdStatus;
 import quickfix.field.OrdType;
 import quickfix.field.OrderID;
 import quickfix.field.OrderQty;
+import quickfix.field.PegDifference;
 import quickfix.field.Price;
 import quickfix.field.SecurityID;
 import quickfix.field.Side;
@@ -109,6 +110,7 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 		Price price = new Price();
 		ClOrdID clOrdID = new ClOrdID();
 		ClientID clientID = new ClientID();
+		PegDifference offset = new PegDifference();
 		MaturityMonthYear expdate = new MaturityMonthYear();
 		
 		//get Order Information
@@ -230,9 +232,13 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 			}
 		}
 		
-		//
+		
 		if (ordType.getValue() == ordType.PEGGED){
+			order.get(offset);
 			double marketprice = Market.genMarketData(100);
+			if (side.getValue() == side.BUY) marketprice = Math.max(marketprice - offset.getValue(),0);
+			if (side.getValue() == side.SELL) marketprice = marketprice + offset.getValue();
+			
 			System.out.println("the random market price:"+ marketprice);
 			ExecutionReport executionReport = new ExecutionReport(
 					getOrderIDCounter(), getExecutionIDCounter(),

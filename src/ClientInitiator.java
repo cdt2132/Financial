@@ -36,6 +36,7 @@ import quickfix.field.MaturityDate;
 import quickfix.field.MaturityMonthYear;
 import quickfix.field.OrdType;
 import quickfix.field.OrderQty;
+import quickfix.field.PegDifference;
 import quickfix.field.Price;
 import quickfix.field.SecurityID;
 import quickfix.field.Side;
@@ -170,6 +171,7 @@ public class ClientInitiator extends ApplicationAdapter{
 		}
 		if (ordertype == 2){
 			order.set(new OrdType (OrdType.PEGGED));
+			order.set(new PegDifference(price));
 			System.out.println("This is a pegged order!");
 		}
 		//set expiration date

@@ -105,7 +105,7 @@ public class Display implements Runnable {
 		panel.add(year);
 		panel.add(new JLabel("Lots:"));
 		panel.add(lots);
-		panel.add(new JLabel("Price:"));
+		panel.add(new JLabel("Price(Limit Order) or Offset(Pegged Order):"));
 		panel.add(price);
 		panel.add(buySell);
 		panel.add(new JLabel("Order Type:"));
