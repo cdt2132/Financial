@@ -1,4 +1,4 @@
-/*
+/**
 *The basic unit of this project, the order. Includes information 
 *like price, trader etc. and methods like print order
 *
@@ -41,7 +41,7 @@ public class Order{
 	 * @param l lot size
 	 * @param p future price
 	 * @param b buy or sell (1 or -1)
-	 * @param ot order type (0,1,2)
+	 * @param ot order type (0: market, 1: limit ,2: pegged)
 	 * @param t trader id
 	 * */
 	public Order(String s, int m, int y, int l, double p, int b, int ot, int t){
@@ -51,7 +51,7 @@ public class Order{
 		lots = l; 
 		price = p; 
 		buySell = b;
-		orderType = ot;  
+		orderType = ot;
 		trader = t;
 		date = new Date();
 	}
@@ -74,7 +74,7 @@ public class Order{
 	public void sendOrdertoExchange() throws Throwable {
 		try {
 			ClientInitiator fixInitiator = ClientInitiator.getInstance();
-			fixInitiator.sendOrder(Integer.toString(trader), symbol, lots, price, buySell, expMonth, expYear);
+			fixInitiator.sendOrder(Integer.toString(trader), symbol, lots, price, buySell, expMonth, expYear, orderType);
 		} catch (ConfigError e) {
 			e.printStackTrace();
 		}

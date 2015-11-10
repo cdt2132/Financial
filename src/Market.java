@@ -5,7 +5,7 @@
  * @version 1 Build November 2015
  */
 import java.util.Random;
-
+/** A class return random market price*/
 public class Market {
 
 	// Generates random prices

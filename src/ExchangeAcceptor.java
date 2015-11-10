@@ -45,6 +45,10 @@ import quickfix.fix42.ExecutionReport;
 import quickfix.fix42.NewOrderSingle;
 import quickfix.fix42.News;
 
+/** A dummy exchange acceptor, which receives order and response with execution report:
+ *  Mechanism: one in five limit orders are partilly filled, and the rest are fully filled;
+ *  Market order is filled by market price
+ *  Pegged order is filled by market price plus or minus the offset */
 public class ExchangeAcceptor extends MessageCracker implements Application {
 
 	/**
@@ -91,7 +95,9 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 	@Override
 	public void toApp(Message arg0, SessionID arg1) throws DoNotSend {
 	}
-
+	
+	
+	/** After receive the order, execute the order and send back to initiator the execution reports */
 	public void onMessage(NewOrderSingle order, SessionID sessionID)
 			throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
 		// sending some news to the client.
@@ -114,47 +120,162 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 		order.get(ordType);
 		order.get(expdate);
 		order.get(clientID);
-		//execute the order, we assume that the exchange fully fill all orders after 3 seconds
-		try {
-			System.out.print("Executing...");
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		//execute the order
+		
+		if (ordType.getValue() == ordType.LIMIT){
+			
+			// one in 5 orders are partially filled and followed by fully filled, others are fully filled
+			if (orderIDCounter%5 == 0){
+				double qty = 0;
+				qty = orderQty.getValue()/2;
+				ExecutionReport executionReport = new ExecutionReport(
+						getOrderIDCounter(), getExecutionIDCounter(),
+						new ExecTransType(ExecTransType.NEW), new ExecType(
+								ExecType.PARTIAL_FILL), new OrdStatus(OrdStatus.PARTIALLY_FILLED),
+						symbol, side, new LeavesQty(qty),
+						new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
+				executionReport.set(symbol);
+				executionReport.set(side);
+				executionReport.set(new OrderQty(qty));
+				executionReport.set(price);
+				executionReport.set(clOrdID);
+				executionReport.set(orderQty);
+				executionReport.set(expdate);
+				executionReport.set(clientID);
+				//send first execution report
+				try {
+					Session.sendToTarget(executionReport, sessionID);
+					System.out.println("Execution Report 1 sent----->>>>>");
+				} catch (SessionNotFound ex) {
+					ex.printStackTrace();
+					System.out.println("Error during order execution" + ex.getMessage());
+				}
+				//generate second execution report
+				ExecutionReport executionReport2 = new ExecutionReport(
+						getOrderIDCounter(), getExecutionIDCounter(),
+						new ExecTransType(ExecTransType.NEW), new ExecType(
+								ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
+						symbol, side, new LeavesQty(0),
+						new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
+				executionReport2.set(symbol);
+				executionReport2.set(side);
+				executionReport2.set(new OrderQty(qty));
+				executionReport2.set(price);
+				executionReport2.set(clOrdID);
+				executionReport2.set(orderQty);
+				executionReport2.set(expdate);
+				executionReport2.set(clientID);
+				//send second execution report
+				try {
+					Session.sendToTarget(executionReport2, sessionID);
+					System.out.println("Execution Report 2 sent----->>>>>");
+				} catch (SessionNotFound ex) {
+					ex.printStackTrace();
+					System.out.println("Error during order execution" + ex.getMessage());
+				}
+				
+			}else{
+				System.out.print("Odd number limit order!");
+				
+				ExecutionReport executionReport = new ExecutionReport(
+						getOrderIDCounter(), getExecutionIDCounter(),
+						new ExecTransType(ExecTransType.NEW), new ExecType(
+								ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
+						symbol, side, new LeavesQty(0),
+						new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
+				executionReport.set(symbol);
+				executionReport.set(side);
+				executionReport.set(orderQty);
+				executionReport.set(price);
+				executionReport.set(clOrdID);
+				executionReport.set(orderQty);
+				executionReport.set(expdate);
+				executionReport.set(clientID);
+				
+				try {
+					Session.sendToTarget(executionReport, sessionID);
+					System.out.println("Execution Report limit order sent----->>>>>");
+				} catch (SessionNotFound ex) {
+					ex.printStackTrace();
+					System.out.println("Error during order execution" + ex.getMessage());
+				}
+			}
 		}
-		//generate execution report		
-		ExecutionReport executionReport = new ExecutionReport(
-				getOrderIDCounter(), getExecutionIDCounter(),
-				new ExecTransType(ExecTransType.NEW), new ExecType(
-						ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
-				symbol, side, new LeavesQty(0),
-				new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
-		executionReport.set(symbol);
-		executionReport.set(side);
-		executionReport.set(orderQty);
-		executionReport.set(price);
-		executionReport.set(clOrdID);
-		executionReport.set(orderQty);
-		executionReport.set(expdate);
-		executionReport.set(clientID);
-		//send execution report
-		try {
-			Session.sendToTarget(executionReport, sessionID);
-			System.out.println("Execution Report sent----->>>>>");
-			System.out.println(executionReport.toString());
-		} catch (SessionNotFound ex) {
-			ex.printStackTrace();
-			System.out.println("Error during order execution" + ex.getMessage());
+		
+		if (ordType.getValue() == ordType.MARKET){
+			double marketprice = Market.genMarketData(100);
+			System.out.println("the random market price:"+ marketprice);
+			ExecutionReport executionReport = new ExecutionReport(
+					getOrderIDCounter(), getExecutionIDCounter(),
+					new ExecTransType(ExecTransType.NEW), new ExecType(
+							ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
+					symbol, side, new LeavesQty(0),
+					new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
+			executionReport.set(symbol);
+			executionReport.set(side);
+			executionReport.set(orderQty);
+			price.setValue(marketprice);
+			executionReport.set(price);
+			executionReport.set(clOrdID);
+			executionReport.set(orderQty);
+			executionReport.set(expdate);
+			executionReport.set(clientID);
+			
+			try {
+				Session.sendToTarget(executionReport, sessionID);
+				System.out.println("Execution Report for market order sent----->>>>>");
+			} catch (SessionNotFound ex) {
+				ex.printStackTrace();
+				System.out.println("Error during order execution" + ex.getMessage());
+			}
 		}
+		
+		//
+		if (ordType.getValue() == ordType.PEGGED){
+			double marketprice = Market.genMarketData(100);
+			System.out.println("the random market price:"+ marketprice);
+			ExecutionReport executionReport = new ExecutionReport(
+					getOrderIDCounter(), getExecutionIDCounter(),
+					new ExecTransType(ExecTransType.NEW), new ExecType(
+							ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
+					symbol, side, new LeavesQty(0),
+					new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
+			executionReport.set(symbol);
+			executionReport.set(side);
+			executionReport.set(orderQty);
+			price.setValue(marketprice);
+			executionReport.set(price);
+			executionReport.set(clOrdID);
+			executionReport.set(orderQty);
+			executionReport.set(expdate);
+			executionReport.set(clientID);
+			
+			try {
+				Session.sendToTarget(executionReport, sessionID);
+				System.out.println("Execution Report for pegged order sent----->>>>>");
+			} catch (SessionNotFound ex) {
+				ex.printStackTrace();
+				System.out.println("Error during order execution" + ex.getMessage());
+			}
+			
+		}
+		
 	}
+	
 
+
+	/** Current order ID*/
 	private int orderIDCounter;
+	/** Current execution ID*/
 	private int executionIDCounter;
-
+	
+	/** A counter to record order ID*/
 	public OrderID getOrderIDCounter() {
 		orderIDCounter++;
 		return new OrderID(String.valueOf(orderIDCounter));
 	}
-
+	
+	/** A counter to record execution ID*/
 	public ExecID getExecutionIDCounter() {
 		executionIDCounter++;
 		return new ExecID(String.valueOf(executionIDCounter));

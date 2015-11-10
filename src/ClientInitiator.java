@@ -44,6 +44,7 @@ import quickfix.field.TransactTime;
 import quickfix.fix42.ExecutionReport;
 import quickfix.fix42.NewOrderSingle;
 
+
 public class ClientInitiator extends ApplicationAdapter{
 	private SocketInitiator socketInitiator;
 	private static ClientInitiator fixIniator;
@@ -97,12 +98,11 @@ public class ClientInitiator extends ApplicationAdapter{
 	}
 
 	@Override
+	/** Once receive the execution report, this function extract trade information and insert into database */
 	public void fromApp(Message message, SessionID sessionId)
 			throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue,
 			UnsupportedMessageType {
 		
-		//received execution report and put order into database
-
 		if (message instanceof ExecutionReport) {
 			ExecutionReport executionReport = (ExecutionReport) message;
 			try {
@@ -133,7 +133,7 @@ public class ClientInitiator extends ApplicationAdapter{
 				int y = expdat.getYear() + 1900;
 				int b = 0;
 				b = (side.getValue() == Side.BUY)?1:-1;
-				Order order = new Order(symbol.getValue(),m, y,(int)orderQty.getValue(),price.getValue(),b,Integer.parseInt(clientID.getValue()));
+				Order order = new Order(symbol.getValue(),m, y,(int)orderQty.getValue(),price.getValue(),b, 0 ,Integer.parseInt(clientID.getValue()));
 				
 				DatabaseManager db = DatabaseManager.getInstance();
 				order.printOrder();
@@ -148,8 +148,8 @@ public class ClientInitiator extends ApplicationAdapter{
 		}
 		
 	}
-	
-	public void sendOrder(String trader, String symbol, int lot, double price,int side,  int expmonth, int expyear ){
+	/** A function that generate order and send to exchange acceptor */
+	public void sendOrder(String trader, String symbol, int lot, double price,int side,  int expmonth, int expyear, int ordertype ){
 		ArrayList<SessionID> sessions = socketInitiator
 				.getSessions();
 		SessionID sessionID = sessions.get(0);
@@ -164,7 +164,14 @@ public class ClientInitiator extends ApplicationAdapter{
 		order.set(new ClientID(trader));
 		// set side
 		if (side == -1) order.set(new Side(Side.SELL));
-		
+		if (ordertype == 0) {
+			order.set(new OrdType (OrdType.MARKET));
+			System.out.println("This is a merket order!");
+		}
+		if (ordertype == 2){
+			order.set(new OrdType (OrdType.PEGGED));
+			System.out.println("This is a pegged order!");
+		}
 		//set expiration date
 		Date expdate = new Date();
 		expdate.setMonth(expmonth);
