@@ -97,6 +97,16 @@ public class DatabaseManager {
 		return rs.getDouble(2);
 	}
 
+	/** Get Market size of a symbol
+	 * @throws SQLException */
+	public double getMarketSize(String symbol) throws SQLException{
+		String sql = "SELECT * FROM Market where symbol=\""+symbol+"\"";
+		System.out.println(sql);
+		ResultSet rs = getResult(sql);
+		rs.next();
+		return rs.getDouble(3);
+	}
+	
 	/** Prints all trades in database*/
 	public void displayTrades() {
 		try {
@@ -262,7 +272,7 @@ public class DatabaseManager {
 				}
 			};
 			
-			// To create market prices, first calculate average price by symbol
+			// To create market prices, first receive price by symbol
 			ResultSet rs = getResult("SELECT symbol, price FROM Market");
 			
 			// Create market prices for each symbol in database

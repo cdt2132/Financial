@@ -10,20 +10,22 @@ import java.util.Random;
 public class Market {
 
 	// Generates random prices
-	public static double genMarketData(double price) {
-
-		Random r = new Random();
-		
-		// std = 25% of purchase price, marketprice normally distributed
-		double std = .25 * price;
-		return r.nextGaussian() * std + price;
-
-	}
 	
 	public static double genMarketDatafromDB(String symbol) throws SQLException {
+	
+		// Return gaussian distributed market value
+		Random r = new Random();
 		DatabaseManager db = DatabaseManager.getInstance();
-		return db.getMarketPrice(symbol);
+		double price = db.getMarketPrice(symbol);
+		double std = .25 * price;
+		return r.nextGaussian() * std + price;
 		
+	}
+	
+	public static double getMarketSize(String symbol) throws SQLException {
+		DatabaseManager db = DatabaseManager.getInstance();
+		double size = db.getMarketSize(symbol);
+		return size;
 	}
 
 }

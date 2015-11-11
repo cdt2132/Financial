@@ -130,18 +130,19 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 		double marketprice = Market.genMarketDatafromDB(symbol.getValue());
 		double limitprice = price.getValue();
 		double qty = orderQty.getValue();
-		
+		double marketsize = Market.getMarketSize(symbol.getValue());
+				
 		// Execute limit order
 		if (ordType.getValue() == ordType.LIMIT){
 			System.out.print("The market price is:"+marketprice);
 			// if the limit order is within 10% variation of market price, full fill the order
-			if (limitprice>=marketprice*0.9 &&  limitprice<=marketprice*1.1 ){
+			if (limitprice>=marketprice*0.9 &&  limitprice<=marketprice*1.1 && qty <= marketsize/2){
 				System.out.print("Fully filled limit order!");
 				sendExecutionReport(sessionID,limitprice,qty,false,symbol,side,clOrdID,clientID,expdate);
 			}
 			// if limit price is 10% - 20% change, partially filled
 			else {
-				if (limitprice>=marketprice*0.8 &&  limitprice<=marketprice*1.2){
+				if (limitprice>=marketprice*0.8 &&  limitprice<=marketprice*1.2 && qty <= marketsize){
 					System.out.print("Partially filled limit order!");
 					sendExecutionReport(sessionID,limitprice,qty/2,true,symbol,side,clOrdID,clientID,expdate);
 				}

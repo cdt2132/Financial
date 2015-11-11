@@ -19,9 +19,10 @@ public class TestClass {
 		
 		System.out.println("Starting Tests...");
 		
-		/* Test Market.java */
+		/* Test Market.java 
 		System.out.println("Testing Market...");
 	
+		// TODO TEST MARKET
 		double price1 = Market.genMarketData(1);
 		double price2 = Market.genMarketData(10);
 		double price3 = Market.genMarketData(100);
@@ -33,6 +34,7 @@ public class TestClass {
 		System.out.println("Market price: " + price3);
 		System.out.println("Market ---> OK");
 		System.out.println();
+		*/
 		
 		/* Test Display.java */
 		System.out.println("Testing Display...");
