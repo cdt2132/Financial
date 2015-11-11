@@ -1,3 +1,4 @@
+
 /**
  * Display Class creates the GUI for the Trade Capture System
  *
@@ -7,6 +8,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.GridLayout;
 import javax.swing.*;
 
@@ -14,23 +16,24 @@ import com.sun.media.sound.Toolkit;
 
 import quickfix.ConfigError;
 
-
 public class Display implements Runnable {
-	
-	/** Run display in new thread*/
+
+	/** Run display in new thread */
 	public void run() {
-		
+
 		// DatabaseManager used to query MySQL database
 		final DatabaseManager db = DatabaseManager.getInstance();
-		
+
 		JButton button = new JButton();
 		// Generate CSV trade or aggregate reports
 		button.setText("Generate a Report");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showOptionDialog(null, "What type of report would you like to produce?",
-						"Feedback", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-						new String[] { "CSV of Trades Entered", "CSV Showing Aggregate Positions", "PnL Report" }, "default");
+				int result = JOptionPane
+						.showOptionDialog(null, "What type of report would you like to produce?", "Feedback",
+								JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] {
+										"CSV of Trades Entered", "CSV Showing Aggregate Positions", "PnL Report" },
+								"default");
 
 				// CSV of trades entered
 				if (result == 0) {
@@ -56,20 +59,19 @@ public class Display implements Runnable {
 					System.out.println("CSV Showing Aggregate Positions");
 					db.outputAggregate(filename);
 				}
-				if (result == 2){
-					//New save dialog object created; displays window 
-					//for using to pick a directory to save PnL report 
-					
-					SaveDialog s = new SaveDialog(); 
-					
-					String filename = s.getName(); 
-					
+				if (result == 2) {
+					// New save dialog object created; displays window
+					// for using to pick a directory to save PnL report
+
+					SaveDialog s = new SaveDialog();
+
+					String filename = s.getName();
+
 					System.out.println("PnL Report");
 					db.outputPnL(filename);
 				}
 			}
 		});
-		
 
 		// CME commodity symbol
 		JTextField symbol = new JTextField();
@@ -90,17 +92,17 @@ public class Display implements Runnable {
 		String[] items = { "Buy", "Sell" };
 		JComboBox<String> buySell = new JComboBox<String>(items);
 
-		//Type of Order 
-		String[] orders = {"Market", "Limit", "Pegged"};
+		// Type of Order
+		String[] orders = { "Market", "Limit", "Pegged" };
 		JComboBox<String> orderT = new JComboBox<String>(orders);
 
 		// Each trader will be assigned a unique id
 		JTextField trader = new JTextField();
 
 		// Create fields and comboboxes
-		JPanel panel = new JPanel(new GridLayout(0, 1));		
+		JPanel panel = new JPanel(new GridLayout(0, 1));
 		panel.add(button);
-		panel.add(new JLabel("Symbol (e.g. HH):"));
+		panel.add(new JLabel("Symbol (e.g. AA):"));
 		panel.add(symbol);
 		panel.add(new JLabel("Contract Expiry Month:"));
 		panel.add(month);
@@ -125,8 +127,7 @@ public class Display implements Runnable {
 			if (result == JOptionPane.OK_OPTION) {
 
 				// Ensure that all fields are completed
-				if (symbol.getText().equals("") || lots.getText().equals("") || price.getText().equals("")
-						|| trader.getText().equals("")) {
+				if (symbol.getText().equals("") || lots.getText().equals("") || trader.getText().equals("")) {
 					JOptionPane.showMessageDialog(panel, "Please enter data into all fields.");
 					result = JOptionPane.showConfirmDialog(null, panel, "Trade Capture System",
 							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -145,19 +146,29 @@ public class Display implements Runnable {
 					}
 
 					try {
-						p = Double.parseDouble(price.getText());
-					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(panel, "Please enter number for price.");
+						db.getMarketPrice(symbol.getText());
+					} catch (SQLException e2) {
+						JOptionPane.showMessageDialog(panel, "Wrong symbol!");
+					}
+					
+					if (orderT.getSelectedItem().equals("Market") == true){
+						p = 0;
+					}else{
+						try {
+							p = Double.parseDouble(price.getText());
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog(panel, "Please enter number for price.");
+						}
 					}
 
 					int b = ((String) buySell.getSelectedItem()).equals("Buy") ? 1 : -1;
-					int ot; 
-					if(((String) orderT.getSelectedItem()).equals("Market") == true){
-						ot = 0;} 
-					else if(((String) orderT.getSelectedItem()).equals("Limit") == true)
-						ot = 1; 
+					int ot;
+					if (((String) orderT.getSelectedItem()).equals("Market") == true) {
+						ot = 0;
+					} else if (((String) orderT.getSelectedItem()).equals("Limit") == true)
+						ot = 1;
 					else
-						ot = 2; 
+						ot = 2;
 					// Create a new order and insert into DB
 					Order o = new Order(symbol.getText(), (Integer) month.getSelectedItem(),
 							(Integer) year.getSelectedItem(), l, p, b, ot, Integer.parseInt(trader.getText()));
@@ -179,7 +190,7 @@ public class Display implements Runnable {
 				}
 			}
 		}
-		
+
 	}
 
 }

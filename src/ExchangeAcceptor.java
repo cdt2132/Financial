@@ -8,6 +8,8 @@
  * @version 1 Build November 2015
  */
 
+import java.sql.SQLException;
+
 import quickfix.Application;
 import quickfix.DoNotSend;
 import quickfix.FieldNotFound;
@@ -96,11 +98,13 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 	/** After receive the order, execute the order and send back to initiator the execution reports
 	 * @param order NewOrderSingle type
 	 * @param sessionID current FIX sessionId
+	 * @throws SQLException 
 	 */
 	public void onMessage(NewOrderSingle order, SessionID sessionID)
-			throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
+			throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue, SQLException {
 		
 		System.out.println("Received a new order");
+		System.out.println(order.toString());
 		// Order and session information
 		Symbol symbol = new Symbol();
 		Side side = new Side();
@@ -109,7 +113,6 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 		Price price = new Price();
 		ClOrdID clOrdID = new ClOrdID();
 		ClientID clientID = new ClientID();
-		PegDifference offset = new PegDifference();
 		MaturityMonthYear expdate = new MaturityMonthYear();
 		
 		// Extract Order Information
@@ -122,183 +125,49 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 		order.get(expdate);
 		order.get(clientID);
 		
+		System.out.print("Symbol!!!!!!!!!"+symbol.getValue());
+		
+		double marketprice = Market.genMarketDatafromDB(symbol.getValue());
+		double limitprice = price.getValue();
+		double qty = orderQty.getValue();
+		
 		// Execute limit order
 		if (ordType.getValue() == ordType.LIMIT){
-			
-			// one in 5 orders are partially filled and followed by fully filled, others are fully filled
-			// If partial fill order, execute order in two parts
-			if (orderIDCounter%5 == 0){
-				double qty = 0;
-				qty = orderQty.getValue()/2;
-				
-				// create new execution report
-				ExecutionReport executionReport = new ExecutionReport(
-						getOrderIDCounter(), getExecutionIDCounter(),
-						new ExecTransType(ExecTransType.NEW), new ExecType(
-								ExecType.PARTIAL_FILL), new OrdStatus(OrdStatus.PARTIALLY_FILLED),
-						symbol, side, new LeavesQty(qty),
-						new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
-				
-				// Set execution report fields
-				executionReport.set(symbol);
-				executionReport.set(side);
-				executionReport.set(new OrderQty(qty));
-				executionReport.set(price);
-				executionReport.set(clOrdID);
-				executionReport.set(orderQty);
-				executionReport.set(expdate);
-				executionReport.set(clientID);
-				
-				//send first execution report (partial fill)
-				try {
-					Session.sendToTarget(executionReport, sessionID);
-					System.out.println("Execution Report 1 sent----->>>>>");
-				} catch (SessionNotFound ex) {
-					ex.printStackTrace();
-					System.out.println("Error during order execution" + ex.getMessage());
-				}
-				
-				//generate second execution report
-				ExecutionReport executionReport2 = new ExecutionReport(
-						getOrderIDCounter(), getExecutionIDCounter(),
-						new ExecTransType(ExecTransType.NEW), new ExecType(
-								ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
-						symbol, side, new LeavesQty(0),
-						new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
-				
-				// set execution report fields
-				executionReport2.set(symbol);
-				executionReport2.set(side);
-				executionReport2.set(new OrderQty(qty));
-				executionReport2.set(price);
-				executionReport2.set(clOrdID);
-				executionReport2.set(orderQty);
-				executionReport2.set(expdate);
-				executionReport2.set(clientID);
-				
-				
-				// send second execution report (partial fill)
-				try {
-					Session.sendToTarget(executionReport2, sessionID);
-					System.out.println("Execution Report 2 sent----->>>>>");
-				} catch (SessionNotFound ex) {
-					ex.printStackTrace();
-					System.out.println("Error during order execution" + ex.getMessage());
-				}
-				
-			} 
-			
-			// If order is fully filled
-			else {
+			System.out.print("The market price is:"+marketprice);
+			// if the limit order is within 10% variation of market price, full fill the order
+			if (limitprice>=marketprice*0.9 &&  limitprice<=marketprice*1.1 ){
 				System.out.print("Fully filled limit order!");
-				
-				// create new execution report
-				ExecutionReport executionReport = new ExecutionReport(
-						getOrderIDCounter(), getExecutionIDCounter(),
-						new ExecTransType(ExecTransType.NEW), new ExecType(
-								ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
-						symbol, side, new LeavesQty(0),
-						new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
-				
-				// set execution report fields
-				executionReport.set(symbol);
-				executionReport.set(side);
-				executionReport.set(orderQty);
-				executionReport.set(price);
-				executionReport.set(clOrdID);
-				executionReport.set(orderQty);
-				executionReport.set(expdate);
-				executionReport.set(clientID);
-				
-				// send execution report (full fill)
-				try {
-					Session.sendToTarget(executionReport, sessionID);
-					System.out.println("Execution Report limit order sent----->>>>>");
-				} catch (SessionNotFound ex) {
-					ex.printStackTrace();
-					System.out.println("Error during order execution" + ex.getMessage());
+				sendExecutionReport(sessionID,limitprice,qty,false,symbol,side,clOrdID,clientID,expdate);
+			}
+			// if limit price is 10% - 20% change, partially filled
+			else {
+				if (limitprice>=marketprice*0.8 &&  limitprice<=marketprice*1.2){
+					System.out.print("Partially filled limit order!");
+					sendExecutionReport(sessionID,limitprice,qty/2,true,symbol,side,clOrdID,clientID,expdate);
+				}
+				// if difference between limit price and market price exceeds 20%, order is not executed and canceled
+				else{
+					System.out.println("Price is too small or too large, Order is canceled!!!");		
 				}
 			}
 		}
 		
 		// Execute market order
 		if (ordType.getValue() == ordType.MARKET){
-			
-			// normally distributed market price
-			double marketprice = Market.genMarketData(price.getValue());
-			System.out.println("the normally distributed market price:"+ marketprice);
-			
-			// create new execution report
-			ExecutionReport executionReport = new ExecutionReport(
-					getOrderIDCounter(), getExecutionIDCounter(),
-					new ExecTransType(ExecTransType.NEW), new ExecType(
-							ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
-					symbol, side, new LeavesQty(0),
-					new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
-			
-			// Set execution report fields
-			executionReport.set(symbol);
-			executionReport.set(side);
-			executionReport.set(orderQty);
-			price.setValue(marketprice);
-			executionReport.set(price);
-			executionReport.set(clOrdID);
-			executionReport.set(orderQty);
-			executionReport.set(expdate);
-			executionReport.set(clientID);
-			
-			// send execution report
-			try {
-				Session.sendToTarget(executionReport, sessionID);
-				System.out.println("Execution Report for market order sent----->>>>>");
-			} catch (SessionNotFound ex) {
-				ex.printStackTrace();
-				System.out.println("Error during order execution" + ex.getMessage());
-			}
+			System.out.print("Market Order!!!!");
+			sendExecutionReport(sessionID,marketprice,qty,false,symbol,side,clOrdID,clientID,expdate);
 		}
 		
 		// Execute pegged order
 		if (ordType.getValue() == ordType.PEGGED){
-			
-			// extract offset from order
-			order.get(offset);
-			double marketprice = Market.genMarketData(price.getValue());
-			
+			PegDifference offset = new PegDifference();
+			order.get(offset);	
+			double pegprice = marketprice;
 			// calculate marketprice based on offset
-			if (side.getValue() == side.BUY) marketprice = Math.max(marketprice - offset.getValue(),0);
-			if (side.getValue() == side.SELL) marketprice = marketprice + offset.getValue();
-			
-			System.out.println("the current market price:"+ marketprice);
-			
-			// create new execution report
-			ExecutionReport executionReport = new ExecutionReport(
-					getOrderIDCounter(), getExecutionIDCounter(),
-					new ExecTransType(ExecTransType.NEW), new ExecType(
-							ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
-					symbol, side, new LeavesQty(0),
-					new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
-			
-			// set execution report fields
-			executionReport.set(symbol);
-			executionReport.set(side);
-			executionReport.set(orderQty);
-			price.setValue(marketprice);
-			executionReport.set(price);
-			executionReport.set(clOrdID);
-			executionReport.set(orderQty);
-			executionReport.set(expdate);
-			executionReport.set(clientID);
-			
-			try {
-				Session.sendToTarget(executionReport, sessionID);
-				System.out.println("Execution Report for pegged order sent----->>>>>");
-			} catch (SessionNotFound ex) {
-				ex.printStackTrace();
-				System.out.println("Error during order execution" + ex.getMessage());
-			}
-			
+			if (side.getValue() == side.BUY) pegprice = Math.max(marketprice - offset.getValue(),0);
+			if (side.getValue() == side.SELL) pegprice = marketprice + offset.getValue();
+			sendExecutionReport(sessionID,pegprice,qty,false,symbol,side,clOrdID,clientID,expdate);
 		}
-		
 	}
 	
 	
@@ -312,6 +181,54 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 	public ExecID getExecutionIDCounter() {
 		executionIDCounter++;
 		return new ExecID(String.valueOf(executionIDCounter));
+	}
+	
+	
+	/** This function generate and send execution report
+	 * @param sessionID 
+	 * @param price Execution price
+	 * @param qty Execution quantity
+	 * @param ispartialfill partial fill or full fill
+	 * @param symbol Symbol
+	 * @param side Buy or Sell
+	 * @param clOrdID OrderID
+	 * @param clientID ClientID
+	 * @param expdate Expiration Year and Month
+	 */
+	public void sendExecutionReport(SessionID sessionID, double price, double qty, boolean ispartialfill,Symbol symbol, Side side,ClOrdID clOrdID,ClientID clientID,MaturityMonthYear expdate ){
+
+		// create new execution report
+		ExecutionReport executionReport = new ExecutionReport(
+				getOrderIDCounter(), getExecutionIDCounter(),
+				new ExecTransType(ExecTransType.NEW), new ExecType(
+						ExecType.FILL), new OrdStatus(OrdStatus.FILLED),
+				symbol, side, new LeavesQty(0),
+				new CumQty(qty), new AvgPx(price));
+		
+		if (ispartialfill){
+			executionReport.set(new ExecType(ExecType.PARTIAL_FILL));
+			executionReport.set(new OrdStatus(OrdStatus.PARTIALLY_FILLED));
+		}
+		
+		// Set execution report fields
+		executionReport.set(symbol);
+		executionReport.set(side);
+		executionReport.set(new OrderQty(qty));
+		executionReport.set(new Price(price));
+		executionReport.set(clOrdID);
+		executionReport.set(expdate);
+		executionReport.set(clientID);
+		
+		// send execution report
+		try {
+			Session.sendToTarget(executionReport, sessionID);
+			System.out.println("Execution Report sent----->>>>>");
+			System.out.println(executionReport.toString());
+		} catch (SessionNotFound ex) {
+			ex.printStackTrace();
+			System.out.println("Error during order execution" + ex.getMessage());
+		}
+		
 	}
 	
 }

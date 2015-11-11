@@ -217,7 +217,7 @@ public class ClientInitiator extends ApplicationAdapter{
 		System.out.println("SingleNewOrder to send:");
 		System.out.println(order.toString());
 		
-		
+		//8=FIX.4.29=8435=D11=121=338=140=144=154=155=AA60=20151111-03:10:19.830109=1200=02:201510=028
 		//send the order
 		try {
 			Session.sendToTarget(order, sessionID);

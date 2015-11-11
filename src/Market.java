@@ -4,6 +4,7 @@
  * @author Caroline Trimble, Kunal Jasty, Haoxiang Gao
  * @version 1 Build November 2015
  */
+import java.sql.SQLException;
 import java.util.Random;
 
 public class Market {
@@ -17,6 +18,12 @@ public class Market {
 		double std = .25 * price;
 		return r.nextGaussian() * std + price;
 
+	}
+	
+	public static double genMarketDatafromDB(String symbol) throws SQLException {
+		DatabaseManager db = DatabaseManager.getInstance();
+		return db.getMarketPrice(symbol);
+		
 	}
 
 }

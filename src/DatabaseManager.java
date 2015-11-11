@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -87,13 +86,23 @@ public class DatabaseManager {
 			return false;
 		}
 	}
+	
+	/** Get Market price of a symbol
+	 * @throws SQLException */
+	public double getMarketPrice(String symbol) throws SQLException{
+		String sql = "SELECT * FROM Market where symbol=\""+symbol+"\"";
+		System.out.println(sql);
+		ResultSet rs = getResult(sql);
+		rs.next();
+		return rs.getDouble(2);
+	}
 
 	/** Prints all trades in database*/
 	public void displayTrades() {
 		try {
 			
 			// Query all trades
-			ResultSet rs = getResult("SELECT * FROM Orders");
+			ResultSet rs = getResult("SELECT * FROM Trades");
 			while (rs.next()) {
 				
 				// print each trade
@@ -122,7 +131,7 @@ public class DatabaseManager {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		// insert order into database
-		String strSQL = "INSERT INTO Orders("
+		String strSQL = "INSERT INTO Trades("
 						+ "symbol, "
 						+ "ordertime, "
 						+ "expMonth, "
@@ -148,7 +157,7 @@ public class DatabaseManager {
 	}
 
 	/**
-	 * Outputs a CSV file with all orders in the database
+	 * Outputs a CSV file with all trades in the database
 	 * @param filePath path to save trade report
 	 */
 	public void outputTrades(String filePath) {
@@ -159,10 +168,10 @@ public class DatabaseManager {
 			String filename = filePath + "/" + timeStamp +"Trades.csv";
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
-			ResultSet rs = getResult("SELECT * FROM Orders");
+			ResultSet rs = getResult("SELECT * FROM Trades");
 			writer.println("Symbol, orderTime, expMonth, expYear, lot, price, buy, trader");
 
-			// print all rows in Orders table
+			// print all rows in Trades table
 			while (rs.next()) {
 				writer.println(rs.getString("symbol") 	 + ", "
 							 + rs.getString("ordertime") + ", "
@@ -195,11 +204,11 @@ public class DatabaseManager {
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			ResultSet rs = getResult("SELECT symbol, expMonth, expYear, SUM(buy*lot*price) " +
-			"						  FROM Orders " +
+			"						  FROM Trades " +
 			"						  GROUP BY symbol, expMonth, expYear");
 			writer.println("Symbol, expMonth, expYear, Aggregate");
 
-			// print all aggregate positions in Orders table
+			// print all aggregate positions in Trades table
 			while (rs.next()) {
 				writer.println(rs.getString("symbol") 	 + ", "
 							 + rs.getString("expMonth")  + ", "
@@ -254,18 +263,17 @@ public class DatabaseManager {
 			};
 			
 			// To create market prices, first calculate average price by symbol
-			ResultSet rs = getResult("SELECT symbol, AVG(price) as price FROM Orders GROUP BY symbol");
+			ResultSet rs = getResult("SELECT symbol, price FROM Market");
 			
 			// Create market prices for each symbol in database
 			// Market price is normally distributed from the average price grouped by symbol
 			while (rs.next()) {
-				double avg_price = rs.getDouble("price");
-				double market_price = Market.genMarketData(avg_price);
-				prices.put(rs.getString("symbol"), market_price);
+				double price = rs.getDouble("price");
+				prices.put(rs.getString("symbol"), price);
 			}
 
 			// Iterate through all trades in database
-			rs = getResult("SELECT * FROM Orders");
+			rs = getResult("SELECT * FROM Trades");
 
 			while (rs.next()) {
 
