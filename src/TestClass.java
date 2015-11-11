@@ -6,28 +6,48 @@
 
 import java.sql.SQLException;
 
+import quickfix.ConfigError;
+
 public class TestClass {	
 
-
-	public static void main(){
+	public static void main(String[] args){
 		
+		/* Start application */
 		TradeCapture tc = new TradeCapture();
 		
 		/* UNIT TESTS */
-		System.out.println("Starting Unit Tests...");
+		
+		System.out.println("Starting Tests...");
+		
+		/* Test Market.java */
+		System.out.println("Testing Market...");
+	
+		double price1 = Market.genMarketData(1);
+		double price2 = Market.genMarketData(10);
+		double price3 = Market.genMarketData(100);
+		System.out.println("Order price: 1");
+		System.out.println("Market price: " + price1);
+		System.out.println("Order price: 10");
+		System.out.println("Market price: " + price2);
+		System.out.println("Order price: 100");
+		System.out.println("Market price: " + price3);
+		System.out.println("Market ---> OK");
+		System.out.println();
 		
 		/* Test Display.java */
-		System.out.println("Testing Display.java...");
+		System.out.println("Testing Display...");
 		Display disp = new Display();
 		System.out.println("Display opened successfully");
+		System.out.println("Display ---> OK");
+		System.out.println();
 		
-		/* Test Order.java */
-		System.out.println("Testing Order.java...");
+		/* Test order creation */
+		System.out.println("Testing Order creation and Execution...");
 		Order oMarket = new Order("MARKETTEST",10,2015,1,30.0, 1,0,1);
 		Order oLimit = new Order("LIMITTEST",10,2015,1,30.0, 1,1,1);
 		Order oPegged = new Order("PEGGEDTEST",10,2015,1,30.0, 1,2,1);
 		
-		System.out.println("Orders created");
+		System.out.println("Orders created: ");
 		System.out.println("Market Order:");
 		oMarket.printOrder();
 		System.out.println("Limit Order:");
@@ -35,7 +55,12 @@ public class TestClass {
 		System.out.println("Pegged Order:");
 		oPegged.printOrder();
 		
-		System.out.println("Sending orders to ecxhange");
+		System.out.println("Order creation ---> OK");
+		System.out.println();
+		
+		/* Test order execution */
+		System.out.println("Testing order execution...");
+		System.out.println("Sending orders to exchange...");
 		try {
 			oMarket.sendOrdertoExchange();
 			oLimit.sendOrdertoExchange();
@@ -45,86 +70,48 @@ public class TestClass {
 			e1.printStackTrace();
 		}
 		
-		/* Test DatabaseManager.java */
-		System.out.println("Testing DatabaseManager.java...");
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Orders sent and received successfully");
+		
+		/* Test Fix Exchange */
+		System.out.println("Additional testing of Fix Exchange...");
+		ClientInitiator fixInitiator;
+		
+		try {
+			System.out.println("ClientInitiator getInstance OK");
+			fixInitiator = ClientInitiator.getInstance();
+			System.out.println("Sending orders from ClientInitiator:");
+			
+			System.out.println("Sending Market order");
+			fixInitiator.sendOrder(Integer.toString(1), "HH", 1, 1, 1, 1, 2016, 0);
+			System.out.println("Sending Limit order");
+			fixInitiator.sendOrder(Integer.toString(1), "HH", 1, 1, 1, 1, 2016, 1);
+			System.out.println("Sending Pegged order");
+			fixInitiator.sendOrder(Integer.toString(1), "HH", 1, 1, 1, 1, 2016, 2);
+			
+		} catch (ConfigError e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		DatabaseManager db = DatabaseManager.getInstance();
 		
-		System.out.println("Trades in database:");
-		db.displayTrades();
+		/* Test Reports */
 		
-		System.out.println("Inserting orders into database...");
-		db.insertOrder(oMarket);
-		db.insertOrder(oLimit);
-		db.insertOrder(oPegged);
+		System.out.println("Testing reports...");
 		System.out.println("Generating reports...");
 		db.outputTrades("./");
 		db.outputAggregate("./");
 		db.outputPnL("./");
 		
-		
-		/* Test ExchangeAcceptor.java */
-		System.out.println("Testing ExchangeAcceptor.java...");
-		
-		
-		/* Test ExchangeListener.java */
-		System.out.println("Testing ExchangeListener.java...");
-		
-		
-		/* Test Market.java */
-		System.out.println("Testing Market.java...");
-	
-		double price1 = Market.genMarketData(1);
-		double price2 = Market.genMarketData(10);
-		double price3 = Market.genMarketData(100);
-		System.out.println("Order price: 1");
-		System.out.println("Market price: " + price1);
-		System.out.println("Order price: 2");
-		System.out.println("Market price: " + price2);
-		System.out.println("Order price: 3");
-		System.out.println("Market price: " + price3);
-		System.out.println();
-		
-		/* Test Order.java */
-		System.out.println("Testing Order.java...");
-		
-		
-		
-		Display disp1 = new Display();
-		
-		
-		Order ord = new Order("BB",10,2015,1,30.0, 1,1,1);
-		ord.printOrder();
-		System.out.println("Order Class OK");
-		
-
-
-		db.insertOrder(ord);
-		System.out.println("DatabaseManager->insertOrder OK");
-		db.getResult("SELECT * FROM Orders ORDER BY ordertime DESC LIMIT 1");
-		try {
-			while (db.rs.next()){
-				for (int i = 1; i <= 8;i++)
-				System.out.println(db.rs.getString(i));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("DatabaseManager->getResult OK");
-		db.outputTrades("./");
-		System.out.println("DatabaseManager->outputTrades OK");
-		db.outputAggregate("./");
-		System.out.println("DatabaseManager->outputAggregate OK");
-
-
-		SaveDialog svd = new SaveDialog();
-		System.out.println(svd.getName());
-		System.out.println("SaveDialog Class OK");
-		
-
-
-		System.out.println("Display class OK");
-		
+		System.out.println("Reports generated successfully");
+		System.out.println("Finished testing");
+		System.exit(0);
 	}
 
 }

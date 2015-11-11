@@ -100,6 +100,7 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 	public void onMessage(NewOrderSingle order, SessionID sessionID)
 			throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
 		
+		System.out.println("Received a new order");
 		// Order and session information
 		Symbol symbol = new Symbol();
 		Side side = new Side();
