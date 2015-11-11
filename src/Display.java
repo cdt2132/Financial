@@ -14,12 +14,15 @@ import com.sun.media.sound.Toolkit;
 
 import quickfix.ConfigError;
 
-/** Creates a GUI used to enter trades and generate reports */
+
 public class Display implements Runnable {
+	
+	/** Run display in new thread*/
 	public void run() {
 		
-		// Insert and query MySQL database
+		// DatabaseManager used to query MySQL database
 		final DatabaseManager db = DatabaseManager.getInstance();
+		
 		JButton button = new JButton();
 		// Generate CSV trade or aggregate reports
 		button.setText("Generate a Report");
@@ -62,7 +65,7 @@ public class Display implements Runnable {
 					String filename = s.getName(); 
 					
 					System.out.println("PnL Report");
-					db.PnL(filename);
+					db.outputPnL(filename);
 				}
 			}
 		});

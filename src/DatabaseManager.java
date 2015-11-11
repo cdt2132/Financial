@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-/** DatabaseManager is a singleton class that connects to AWS MySQL database to store trades */
+
 public class DatabaseManager {
+	
+	// Instance variables
 	String url = "jdbc:mysql://csor4995.cy52ghsodz6n.us-west-2.rds.amazonaws.com/CSOR4995";
 	String username = "root";
 	String password = "12345678";
@@ -27,6 +29,8 @@ public class DatabaseManager {
 	Statement stmt;
 	
 	private static DatabaseManager instance = null;
+	
+	/** Constructor */
 	protected DatabaseManager() {
 		try{
 			Class.forName( "com.mysql.jdbc.Driver" ); 
@@ -40,6 +44,10 @@ public class DatabaseManager {
 		}
 	}
 	
+	
+	/** Get instance of class 
+	 * @return DatabaseManager instance
+	 */
 	public static DatabaseManager getInstance() {
 	      if(instance == null) {
 	         instance = new DatabaseManager();
@@ -80,10 +88,15 @@ public class DatabaseManager {
 		}
 	}
 
+	/** Prints all trades in database*/
 	public void displayTrades() {
 		try {
+			
+			// Query all trades
 			ResultSet rs = getResult("SELECT * FROM Orders");
 			while (rs.next()) {
+				
+				// print each trade
 				System.out.println(rs.getString("symbol") + ", "
 				+ rs.getString("ordertime") + ", "
 				+ rs.getString("expMonth") + ", "
@@ -108,6 +121,7 @@ public class DatabaseManager {
 	public boolean insertOrder(Order o) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+		// insert order into database
 		String strSQL = "INSERT INTO Orders("
 						+ "symbol, "
 						+ "ordertime, "
@@ -128,6 +142,8 @@ public class DatabaseManager {
 						+ o.trader   + ")";
 		System.out.println(strSQL);
 		if (updateSql(strSQL)) return true;
+		
+		// return false if order was not inserted
 		return false;
 	}
 
@@ -199,53 +215,68 @@ public class DatabaseManager {
 		}
 	}
 
-	public void PnL(String filePath) {
+	/** Output PnL report (shows PnL of each trade, each trader, and each future type)
+	 * @param filePath path to save PnL report
+	 */
+	public void outputPnL(String filePath) {
+		
 		try {
+			
+			// Filename is <timestamp>PnL
 			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(System.currentTimeMillis()));
 			String filename = filePath + "/" + timeStamp +"PnL.csv";
 			System.out.println(filename);
+			
+			// Create new printwriter, print column titles
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			writer.println("Date, Trader, Symbol, expMonth, expYear, purchasePrice, marketPrice, PnL");
-			ResultSet rs = getResult("SELECT symbol, AVG(price) as price FROM Orders GROUP BY symbol");
 			
+			// Data structures store PnL information after sql query
 			double totalPnL = 0;
 			HashMap<String, Double> symbolPnL = new HashMap<String, Double>();
 			HashMap<String, Double> prices = new HashMap<String, Double>();
 			HashMap<Integer, Double> traderPnL = new HashMap<Integer, Double>();
 			ArrayList<Trader> tsortedPnL = new ArrayList<Trader>();
-			ArrayList<Symbol> ssortedPnL = new ArrayList<Symbol>();
+			ArrayList<TradeSymbol> ssortedPnL = new ArrayList<TradeSymbol>();
 			
+			// Compares two trades pnl's
 			Comparator<Trader> tcomparator = new Comparator<Trader>() {
 				public int compare(Trader t1, Trader t2) {
 					return t1.getPnL() < t2.getPnL() ? 1 : -1;
 				}
 			};
 			
-			Comparator<Symbol> scomparator = new Comparator<Symbol>() {
-				public int compare(Symbol s1, Symbol s2) {
+			// Compares two symbols pnl's
+			Comparator<TradeSymbol> scomparator = new Comparator<TradeSymbol>() {
+				public int compare(TradeSymbol s1, TradeSymbol s2) {
 					return s1.getPnL() < s2.getPnL() ? 1 : -1;
 				}
 			};
 			
+			// To create market prices, first calculate average price by symbol
+			ResultSet rs = getResult("SELECT symbol, AVG(price) as price FROM Orders GROUP BY symbol");
+			
+			// Create market prices for each symbol in database
+			// Market price is normally distributed from the average price grouped by symbol
 			while (rs.next()) {
-				
 				double avg_price = rs.getDouble("price");
-				
 				double market_price = Market.genMarketData(avg_price);
 				prices.put(rs.getString("symbol"), market_price);
-			
 			}
 
+			// Iterate through all trades in database
 			rs = getResult("SELECT * FROM Orders");
 
 			while (rs.next()) {
 
+				// Calculate PnL of trade
 				String symbol = rs.getString("symbol");
 				double price = rs.getDouble("price");
 				double market_price = prices.get(symbol);
 				double pnl = market_price - price;
 				totalPnL += pnl;
 				
+				// Update trades HM and symbols HM with pnl
 				int trader = rs.getInt("trader");
 				if (traderPnL.containsKey(trader)) {
 					traderPnL.put(trader, traderPnL.get(trader) + pnl);
@@ -259,7 +290,8 @@ public class DatabaseManager {
 					symbolPnL.put(symbol, pnl);
 				}
 				
-				writer.println(rs.getString("ordertime")		 + ", "
+				// Print pnl info to file
+				writer.println(rs.getString("ordertime") + ", "
 							 + rs.getString("trader")    + ", "
 							 + rs.getString("symbol") 	 + ", "
 							 + rs.getString("expMonth")  + ", "
@@ -269,44 +301,41 @@ public class DatabaseManager {
 				             + pnl						 + ", "
 				);
 				
-				/*
-				System.out.println(symbol + ":");
-				System.out.println("Price: " + price);
-				System.out.println("Market Price: " + market_price);
-				System.out.println("PnL: " + pnl + "\n");	
-				*/
-				
 			}
+			
 			writer.println();
 			
+			// Convert hashmaps to arraylists (hacky way to sort)
 			for (Integer traderId : traderPnL.keySet()) {
 				Trader newTrader = new Trader(traderId, traderPnL.get(traderId));
 				tsortedPnL.add(newTrader);
 			}
 			
 			for (String symbolId: symbolPnL.keySet()) {
-				Symbol newSymbol = new Symbol(symbolId, symbolPnL.get(symbolId));
+				TradeSymbol newSymbol = new TradeSymbol(symbolId, symbolPnL.get(symbolId));
 				ssortedPnL.add(newSymbol);
 			}
 			
+			// Sort traders and symbols by pnl
 			Collections.sort(tsortedPnL, tcomparator);
 			Collections.sort(ssortedPnL, scomparator);
 			
+			// Write out trader and symbol pnls to report
 			writer.println("Trader, PnL");
 			for (Trader t : tsortedPnL) {
 				writer.println(t.getId() + ", " + t.getPnL());
 			}
 			writer.println();
 			writer.println("Symbol, PnL");
-			for (Symbol s : ssortedPnL) {
+			for (TradeSymbol s : ssortedPnL) {
 				writer.println(s.getId() + ", " + s.getPnL());
 			}
 			
+			// Write out total pnl .. prices are normally distributed so should be close to 0
 			writer.println();
 			writer.println("TOTAL PNL: " + totalPnL);
 			
 			writer.close();
-			
 			
 		} catch (SQLException sqle) {
 			System.out.println(sqle.toString());

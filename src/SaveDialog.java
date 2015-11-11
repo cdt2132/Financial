@@ -22,6 +22,7 @@ public class SaveDialog extends JFrame {
 	private JButton buttonBrowse;
 	private String fileName; 
 
+	/** Constructor */
 	public SaveDialog() {
 		super("Save As");
 		setLayout(new FlowLayout());

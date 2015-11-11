@@ -1,16 +1,17 @@
 /**
- * Trader object
+ * Trade Symbol class
  *
  * @author Caroline Trimble, Kunal Jasty, Haoxiang Gao
  * @version 1 Build October 2015
  */
 
-public class Trader {
-	int id;
+
+public class TradeSymbol {
+	String id;
 	double pnl;
 	
 	/** Constructor */
-	public Trader(int id, double pnl) {
+	public TradeSymbol(String id, double pnl) {
 		this.id = id;
 		this.pnl = pnl;
 	}
@@ -23,9 +24,10 @@ public class Trader {
 	}
 	
 	/** Id accessor 
-	 * @return id int trader id
+	 * @return id string symbol id
 	 */
-	public int getId() {
+	
+	public String getId() {
 		return id;
 	}
 }
