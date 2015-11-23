@@ -60,14 +60,14 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 	@Override
 	public void fromAdmin(Message arg0, SessionID arg1) throws FieldNotFound,
 			IncorrectDataFormat, IncorrectTagValue, RejectLogon {
-		//System.out.println("fromAdmin " + arg0);
+		//System.out.println("(ExchangeAcceptor) fromAdmin: " + arg0);
 	}
 
 	@Override
 	public void fromApp(Message message, SessionID sessionID)
 			throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue,
 			UnsupportedMessageType {
-		//System.out.println("fromApp " + message);
+		System.out.println("(ExchangeAcceptor) Received Message: " + message);
 		crack(message, sessionID);
 
 	}
@@ -103,7 +103,7 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 	public void onMessage(NewOrderSingle order, SessionID sessionID)
 			throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue, SQLException {
 		
-		System.out.println("Received a new order");
+		System.out.print("(ExchangeAcceptor) Received a new order: ");
 		System.out.println(order.toString());
 		// Order and session information
 		Symbol symbol = new Symbol();
@@ -124,8 +124,9 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 		order.get(ordType);
 		order.get(expdate);
 		order.get(clientID);
+		System.out.println("(ExchangeAcceptor) Extracted order information");
 		
-		System.out.print("Symbol!!!!!!!!!"+symbol.getValue());
+		System.out.print("(ExchangeAcceptor) Symbol: " + symbol.getValue());
 		
 		double marketprice = Market.genMarketDatafromDB(symbol.getValue());
 		double limitprice = price.getValue();
@@ -134,33 +135,41 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 				
 		// Execute limit order
 		if (ordType.getValue() == ordType.LIMIT){
-			System.out.print("The market price is:"+marketprice);
+			System.out.println("(ExchangeAcceptor) Limit order type");
 			// if the limit order is within 10% variation of market price, full fill the order
 			if (limitprice>=marketprice*0.9 &&  limitprice<=marketprice*1.1 && qty <= marketsize/2){
-				System.out.print("Fully filled limit order!");
+				System.out.println("(ExchangeAcceptor) Sending fully filled limit order");
 				sendExecutionReport(sessionID,limitprice,qty,false,symbol,side,clOrdID,clientID,expdate);
 			}
-			// if limit price is 10% - 20% change, partially filled
-			else {
-				if (limitprice>=marketprice*0.8 &&  limitprice<=marketprice*1.2 && qty <= marketsize){
-					System.out.print("Partially filled limit order!");
-					sendExecutionReport(sessionID,limitprice,qty/2,true,symbol,side,clOrdID,clientID,expdate);
-				}
-				// if difference between limit price and market price exceeds 20%, order is not executed and canceled
-				else{
-					System.out.println("Price is too small or too large, Order is canceled!!!");		
-				}
+			// if limit price is 10% - 20% change and qty < marketsize, fill half of order CHANGE THIS
+			else if (limitprice>=marketprice*0.8 &&  limitprice<=marketprice*1.2 && qty <= marketsize){
+				System.out.println("(ExchangeAcceptor) Sending partially filled limit order");
+				sendExecutionReport(sessionID,limitprice,qty/2,true,symbol,side,clOrdID,clientID,expdate);
+			}
+			// if difference between limit price and market price exceeds 20%, order is not executed and canceled
+			else{
+				System.out.println("(ExchangeAcceptor) Cancelling limit order");		
 			}
 		}
 		
 		// Execute market order
 		if (ordType.getValue() == ordType.MARKET){
-			System.out.print("Market Order!!!!");
-			sendExecutionReport(sessionID,marketprice,qty,false,symbol,side,clOrdID,clientID,expdate);
+			System.out.println("(ExchangeAcceptor) Market order type");
+			if (qty <= marketsize/2) {
+				System.out.println("(ExchangeAcceptor) Sending fully filled market order");
+				sendExecutionReport(sessionID,marketprice,qty,false,symbol,side,clOrdID,clientID,expdate);
+			} else if (qty <= marketsize){
+				// fill half of order (partial fill)
+				System.out.println("(ExchangeAcceptor) Sending partially filled market order");
+				sendExecutionReport(sessionID,marketprice,qty/2,false,symbol,side,clOrdID,clientID,expdate);
+			} else {
+				System.out.println("(ExchangeAcceptor) Cancelling market order");
+			}
 		}
 		
 		// Execute pegged order
 		if (ordType.getValue() == ordType.PEGGED){
+			System.out.println("(ExchangeAcceptor) Pegged order type");
 			PegDifference offset = new PegDifference();
 			order.get(offset);	
 			double pegprice = marketprice;

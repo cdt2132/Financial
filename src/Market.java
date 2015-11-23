@@ -10,6 +10,11 @@ import java.util.Random;
 public class Market {
 
 	// Generates random prices
+	public static double genMarketData(double price) {
+		Random r = new Random();
+		double std = .15*price;
+		return r.nextGaussian()*std + price;
+	}
 	
 	public static double genMarketDatafromDB(String symbol) throws SQLException {
 	

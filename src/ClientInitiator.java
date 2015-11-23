@@ -118,7 +118,7 @@ public class ClientInitiator extends ApplicationAdapter{
 			try {
 				
 				System.out.println("Received Execution Report from Exchange");
-				
+				System.out.println("Inserting trade into database");
 				//  Order and session information
 				Symbol symbol = new Symbol();
 				Side side = new Side();

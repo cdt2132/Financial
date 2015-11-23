@@ -9,9 +9,67 @@ import java.sql.SQLException;
 import quickfix.ConfigError;
 
 public class TestClass {	
-
+	
 	public static void main(String[] args){
 		
+		DatabaseManager db = DatabaseManager.getInstance();
+		
+		Order o1 = new Order("HH",11,2015,20,Market.genMarketData(80.0), 1,0,1);
+		Order o2 = new Order("HH",11,2015,25,Market.genMarketData(80.0), 1,0,1);
+		Order o3 = new Order("HH",11,2015,23,Market.genMarketData(80.0), -1,0,2);
+		Order o4 = new Order("HH",2,2016,30,Market.genMarketData(80.0), -1,0,3);
+		Order o5 = new Order("HH",2,2016,15,Market.genMarketData(80.0), 1,0,2);
+		
+		Order o6 = new Order("NN",4,2016,15,Market.genMarketData(90.0), -1,0,1);
+		Order o7 = new Order("NN",4,2016,20,Market.genMarketData(90.0), 1,0,5);
+		Order o8 = new Order("NN",3,2016,48,Market.genMarketData(90.0), -1,0,4);
+		Order o9 = new Order("NN",3,2016,38,Market.genMarketData(90.0), 1,0,2);
+		Order o10 = new Order("NN",3,2016,19,Market.genMarketData(90.0), 1,0,1);
+
+		Order o11 = new Order("NG",5,2016,21,Market.genMarketData(60.0), 1,0,1);
+		Order o12 = new Order("NG",5,2016,19,Market.genMarketData(60.0), 1,0,3);
+		Order o13 = new Order("NG",10,2015,27,Market.genMarketData(60.0), -1,0,4);
+		Order o14 = new Order("NG",10,2015,26,Market.genMarketData(60.0), -1,0,4);
+		Order o15 = new Order("NG",10,2015,40,Market.genMarketData(90.0), -1,0,5);
+	
+		Order o16 = new Order("LN",4,2016,45,Market.genMarketData(100.0), 1,0,5);
+		Order o17 = new Order("LN",4,2016,11,Market.genMarketData(100.0), 1,0,2);
+		Order o18 = new Order("LN",1,2016,13,Market.genMarketData(100.0), 1,0,2);
+		Order o19 = new Order("LN",1,2016,40,Market.genMarketData(100.0), -1,0,3);
+		Order o20 = new Order("LN",1,2016,37,Market.genMarketData(100.0), -1,0,1);
+
+		db.insertOrder(o1);
+		db.insertOrder(o2);
+		db.insertOrder(o3);
+		db.insertOrder(o4);
+		db.insertOrder(o5);
+		
+		db.insertOrder(o6);
+		db.insertOrder(o7);
+		db.insertOrder(o8);
+		db.insertOrder(o9);
+		db.insertOrder(o10);
+		
+		db.insertOrder(o11);
+		db.insertOrder(o12);
+		db.insertOrder(o13);
+		db.insertOrder(o14);
+		db.insertOrder(o15);
+		
+		db.insertOrder(o16);
+		db.insertOrder(o17);
+		db.insertOrder(o18);
+		db.insertOrder(o19);
+		db.insertOrder(o20);
+		
+		db.outputTrades("./");
+		db.outputAggregate("./");
+		db.outputPnL("./");
+	}
+	
+	public static void test(String[] args){
+		
+	
 		/* Start application */
 		TradeCapture tc = new TradeCapture();
 		
@@ -114,6 +172,7 @@ public class TestClass {
 		System.out.println("Reports generated successfully");
 		System.out.println("Finished testing");
 		System.exit(0);
+		
 	}
 
 }
