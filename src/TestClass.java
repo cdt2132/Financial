@@ -10,7 +10,7 @@ import quickfix.ConfigError;
 
 public class TestClass {	
 	
-	public static void main(String[] args){
+	public static void test(String[] args){
 		
 		DatabaseManager db = DatabaseManager.getInstance();
 		
@@ -67,7 +67,7 @@ public class TestClass {
 		db.outputPnL("./");
 	}
 	
-	public static void test(String[] args){
+	public static void main(String[] args){
 		
 	
 		/* Start application */
@@ -77,22 +77,6 @@ public class TestClass {
 		
 		System.out.println("Starting Tests...");
 		
-		/* Test Market.java 
-		System.out.println("Testing Market...");
-	
-		// TODO TEST MARKET
-		double price1 = Market.genMarketData(1);
-		double price2 = Market.genMarketData(10);
-		double price3 = Market.genMarketData(100);
-		System.out.println("Order price: 1");
-		System.out.println("Market price: " + price1);
-		System.out.println("Order price: 10");
-		System.out.println("Market price: " + price2);
-		System.out.println("Order price: 100");
-		System.out.println("Market price: " + price3);
-		System.out.println("Market ---> OK");
-		System.out.println();
-		*/
 		
 		/* Test Display.java */
 		System.out.println("Testing Display...");
@@ -101,11 +85,11 @@ public class TestClass {
 		System.out.println("Display ---> OK");
 		System.out.println();
 		
-		/* Test order creation */
+		/* Test order creation */ 
 		System.out.println("Testing Order creation and Execution...");
-		Order oMarket = new Order("MARKETTEST",10,2015,1,30.0, 1,0,1);
-		Order oLimit = new Order("LIMITTEST",10,2015,1,30.0, 1,1,1);
-		Order oPegged = new Order("PEGGEDTEST",10,2015,1,30.0, 1,2,1);
+		Order oMarket = new Order("HH",10,2015,10,80.0, 1,0,1);
+		Order oLimit = new Order("HH",10,2015,10,80.0, 1,1,1);
+		Order oPegged = new Order("HH",10,2015,10,80.0, 1,2,1);
 		
 		System.out.println("Orders created: ");
 		System.out.println("Market Order:");
@@ -131,11 +115,14 @@ public class TestClass {
 		}
 		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.exit(0);
+		
 		System.out.println("Orders sent and received successfully");
 		
 		/* Test Fix Exchange */

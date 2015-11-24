@@ -161,7 +161,7 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 			} else if (qty <= marketsize){
 				// fill half of order (partial fill)
 				System.out.println("(ExchangeAcceptor) Sending partially filled market order");
-				sendExecutionReport(sessionID,marketprice,qty/2,false,symbol,side,clOrdID,clientID,expdate);
+				sendExecutionReport(sessionID,marketprice,qty/2,true,symbol,side,clOrdID,clientID,expdate);
 			} else {
 				System.out.println("(ExchangeAcceptor) Cancelling market order");
 			}
@@ -207,6 +207,7 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 	 */
 	public void sendExecutionReport(SessionID sessionID, double price, double qty, boolean ispartialfill,Symbol symbol, Side side,ClOrdID clOrdID,ClientID clientID,MaturityMonthYear expdate ){
 
+		System.out.println("(ExchangeAcceptor) Sending Execution Report");
 		// create new execution report
 		ExecutionReport executionReport = new ExecutionReport(
 				getOrderIDCounter(), getExecutionIDCounter(),
@@ -216,6 +217,7 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 				new CumQty(qty), new AvgPx(price));
 		
 		if (ispartialfill){
+			System.out.println("(ExchangeAcceptor) Set ExecType and OrdStatus to Partial Fill");
 			executionReport.set(new ExecType(ExecType.PARTIAL_FILL));
 			executionReport.set(new OrdStatus(OrdStatus.PARTIALLY_FILLED));
 		}
@@ -232,8 +234,8 @@ public class ExchangeAcceptor extends MessageCracker implements Application {
 		// send execution report
 		try {
 			Session.sendToTarget(executionReport, sessionID);
-			System.out.println("Execution Report sent----->>>>>");
-			System.out.println(executionReport.toString());
+			System.out.println("(ExchangeAcceptor) Execution Report Sent");
+			System.out.println("(ExchangeAcceptor) Execution Report: " + executionReport.toString());
 		} catch (SessionNotFound ex) {
 			ex.printStackTrace();
 			System.out.println("Error during order execution" + ex.getMessage());

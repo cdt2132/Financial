@@ -117,8 +117,8 @@ public class ClientInitiator extends ApplicationAdapter{
 			ExecutionReport executionReport = (ExecutionReport) message;
 			try {
 				
-				System.out.println("Received Execution Report from Exchange");
-				System.out.println("Inserting trade into database");
+				System.out.println("(ClientInitiator) Received Execution Report from Exchange");
+				System.out.println("(ClientInitiator) Inserting trade into database");
 				//  Order and session information
 				Symbol symbol = new Symbol();
 				Side side = new Side();
@@ -198,12 +198,11 @@ public class ClientInitiator extends ApplicationAdapter{
 		// Adjust ordertype if necessary
 		if (ordertype == 0) {
 			order.set(new OrdType (OrdType.MARKET));
-			System.out.println("This is a merket order!");
-		}
-		if (ordertype == 2){
+			
+		} else if (ordertype == 2){
 			order.set(new OrdType (OrdType.PEGGED));
 			order.set(new PegDifference(price));
-			System.out.println("This is a pegged order!");
+			
 		}
 		
 		//set expiration date
@@ -214,12 +213,12 @@ public class ClientInitiator extends ApplicationAdapter{
 		order.set(new MaturityMonthYear(df.format(expdate)));;
 		
 		// print order
-		System.out.println("SingleNewOrder to send:");
-		System.out.println(order.toString());
+		System.out.println("(ClientInitiator) New Order: " + order.toString());
 		
 		//8=FIX.4.29=8435=D11=121=338=140=144=154=155=AA60=20151111-03:10:19.830109=1200=02:201510=028
 		//send the order
 		try {
+			System.out.println("(ClientInitiator) Sending order to exchange");
 			Session.sendToTarget(order, sessionID);
 		} catch (SessionNotFound e) {
 			e.printStackTrace();
