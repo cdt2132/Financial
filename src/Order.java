@@ -1,12 +1,11 @@
 /**
-*The basic unit of this project, the order. Includes information 
+*Equity order. Includes information 
 *like price, trader etc. and methods like print order
 *
 *@author Caroline Trimble, Kunal Jasty, Haoxiang Gao
 *@version 1 Build October 2015
 */ 
 
-import java.util.Calendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
