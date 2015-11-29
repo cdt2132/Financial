@@ -10,11 +10,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Swap {
-	
+	/** Start day of swap */
+	int startDay;
 	/** Start month of swap*/
 	int startMonth;
 	/** Start year of swap*/
 	int startYear;
+	/** Termination day of swap */
+	int termDay;
 	/** Termination month of swap*/
 	int termMonth;
 	/** Termination year of swap*/
@@ -31,27 +34,32 @@ public class Swap {
 	int fixedOrfloat;
 	Date date;
 	
-	public Swap(int sMonth, int sYear, int tMonth, int tYear, double flRate, double spread, double fiRate) {
+	public Swap(int sDay, int sMonth, int sYear, int tDay, int tMonth, int tYear, double flRate, double spread, double fiRate, int fixorfloat) {
+		startDay = sDay;
 		startMonth = sMonth;
 		startYear = sYear;
+		termDay = tDay;
 		termMonth = tMonth;
 		termYear = tYear;
 		floatRate = flRate;
 		floatRateSpread = spread;
 		fixedRate = fiRate;
-		date = new Date();
+		fixedOrfloat = fixorfloat;
 	}
 	
 	void printSwap() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println(dateFormat.format(date));
-		System.out.println(startMonth   + " "
-				 + startYear + " " 
-				 + termMonth  + " "
+		System.out.println(startDay + " "
+				 + startMonth   + " "
+				 + startYear 	+ " " 
+				 + termDay		+ " "
+				 + termMonth  	+ " "
 				 + termYear     + " "
 				 + floatRate    + " "
 				 + floatRateSpread  + " "
-				 + fixedRate);
+				 + fixedRate	+ " "
+				 + fixedOrfloat);
 	}
 	
 	
