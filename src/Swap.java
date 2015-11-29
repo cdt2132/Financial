@@ -11,10 +11,14 @@ import java.util.Date;
 
 public class Swap {
 	
+	/** Start day of swap*/
+	int startDay; 
 	/** Start month of swap*/
 	int startMonth;
 	/** Start year of swap*/
 	int startYear;
+	/** Termination day of swap*/
+	int termDay; 
 	/** Termination month of swap*/
 	int termMonth;
 	/** Termination year of swap*/
@@ -28,17 +32,23 @@ public class Swap {
 	/** 1 = pays fixed rate
 	 *  -1 = pays floating rate
 	 */
+	/** the number of the trader */ 
+	int trader; 
 	int fixedOrfloat;
+	
 	Date date;
 	
-	public Swap(int sMonth, int sYear, int tMonth, int tYear, double flRate, double spread, double fiRate) {
+	public Swap(int sDay, int sMonth, int sYear, int tDay, int tMonth, int tYear, double flRate, double spread, double fiRate, int t) {
+		startDay = sDay; 
 		startMonth = sMonth;
 		startYear = sYear;
+		termDay = tDay; 
 		termMonth = tMonth;
 		termYear = tYear;
 		floatRate = flRate;
 		floatRateSpread = spread;
 		fixedRate = fiRate;
+		int trader = t; 
 		date = new Date();
 	}
 	
