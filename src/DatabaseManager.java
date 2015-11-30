@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 
 public class DatabaseManager {
@@ -163,6 +164,16 @@ public class DatabaseManager {
 		if (updateSql(strSQL)) return true;
 		
 		// return false if order was not inserted
+		return false;
+	}
+	
+	public boolean insertSwap(Swap s) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		// Finish after caroline commits
+						
+		if (updateSql(strSQL)) return true;
+		
 		return false;
 	}
 
@@ -355,6 +366,68 @@ public class DatabaseManager {
 			
 			writer.close();
 			
+		} catch (SQLException sqle) {
+			System.out.println(sqle.toString());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void swapTrades(String filepath) {
+		try {
+			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(System.currentTimeMillis()));
+			String filename = filepath + "/" + timeStamp +"swapTrades.csv";
+			System.out.println(filename);
+			
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
+			
+			ResultSet rs = getResult("SELECT * FROM Swaps");
+
+			// print all rows in Trades table
+			while (rs.next()) {
+				writer.println(rs.getString("swapTime") 	   + ", "
+							 + rs.getString("startDay") 	   + ", "
+				             + rs.getString("startMonth")  	   + ", "
+				             + rs.getString("startYear")       + ", "
+							 + rs.getString("termDay")         + ", "
+							 + rs.getString("termMonth")       + ", "
+							 + rs.getString("termYear")        + ", "
+							 + rs.getString("floatRate")       + ", "
+							 + rs.getString("floatRateSpread") + ", "
+							 + rs.getString("fixedRate")	   + ", "
+							 + rs.getString("FixedOrFloat")
+				);
+			}
+			writer.close();
+			
+		} catch (SQLException sqle) {
+			System.out.println(sqle.toString());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void swapAggregate(String filepath) {
+		try {
+			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(System.currentTimeMillis()));
+			String filename = filepath + "/" + timeStamp +"swapAggregate.csv";
+			System.out.println(filename);
+			
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
+		} catch (SQLException sqle) {
+			System.out.println(sqle.toString());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void swapPNL(String filepath) {
+		try{
+			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(System.currentTimeMillis()));
+			String filename = filepath + "/" + timeStamp +"swapPnL.csv";
+			System.out.println(filename);
+			
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 		} catch (SQLException sqle) {
 			System.out.println(sqle.toString());
 		} catch(IOException e) {

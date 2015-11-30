@@ -121,7 +121,6 @@ public class TestClass {
 			e.printStackTrace();
 		}
 		
-		System.exit(0);
 		
 		System.out.println("Orders sent and received successfully");
 		
