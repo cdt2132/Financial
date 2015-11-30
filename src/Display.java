@@ -42,7 +42,7 @@ public class Display implements Runnable {
 				String filename = s.getName();
 
 				System.out.println("CSV of Trades Entered");
-				db.outputTrades(filename);
+				//db.outputTrades(filename);
 			}
 
 			// CSV of aggregate positions
@@ -55,7 +55,7 @@ public class Display implements Runnable {
 				String filename = s.getName();
 
 				System.out.println("CSV Showing Aggregate Positions");
-				db.outputAggregate(filename);
+				//db.outputAggregate(filename);
 			}
 			if (result == 2) {
 				// New save dialog object created; displays window
@@ -66,11 +66,11 @@ public class Display implements Runnable {
 				String filename = s.getName();
 
 				System.out.println("PnL Report");
-				db.outputPnL(filename);
+				//db.outputPnL(filename);
 			}
 			initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-					new String[] { "Produce a Report", "Record a Swap", "Record a Future or Option Trade" },
+					new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" },
 					"default");
 		} else if (initial == 3) {
 
