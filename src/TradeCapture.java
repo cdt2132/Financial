@@ -16,7 +16,7 @@ public class TradeCapture {
 	public static ArrayList<Date> holidays;
 	
 	// Main function
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, ParseException {
 		formatDates();
 		
 		// create new ExchangeListener and Display
@@ -26,8 +26,9 @@ public class TradeCapture {
 	
 	public static void formatDates() throws ParseException {
 		CURRENT_DATE = new Date();
+		holidays = new ArrayList<Date>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
+	
 		holidays.add((Date) sdf.parse("01/01/2015"));
 		holidays.add((Date) sdf.parse("19/01/2015"));
 		holidays.add((Date) sdf.parse("16/02/2015"));

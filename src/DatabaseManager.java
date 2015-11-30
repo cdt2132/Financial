@@ -172,7 +172,7 @@ public class DatabaseManager {
 		
 		// Finish after caroline commits
 						
-		if (updateSql(strSQL)) return true;
+		//if (updateSql(strSQL)) return true;
 		
 		return false;
 	}
