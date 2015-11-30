@@ -28,7 +28,7 @@ public class Order{
 	int buySell;
 	/** Type of order */
 	int orderType;
-	/** The first and last name of the trader */
+	/** The number of the trader */
 	int trader;
 	/** The time the order is placed */
 	Date date;
