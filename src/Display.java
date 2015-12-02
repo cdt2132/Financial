@@ -367,8 +367,7 @@ public class Display implements Runnable {
 						int ty = (Integer) termYear.getSelectedItem(); 
 						
 						/* Creating a swap object */ 
-						Swap o = new Swap(sd, sm, sy, td, tm, ty, r, s, fr, t);
-						
+						Swap o = new Swap(sd, sm, sy, td, tm, ty, r, s, fr, whoFloat.getSelectedItem().toString(),whoFix.getSelectedItem().toString(),t);
 						o.printSwap();
 						/*try {
 							o.sendOrdertoExchange();
@@ -376,7 +375,7 @@ public class Display implements Runnable {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}*/
-						
+						db.insertSwap(o);
 						// Resets GUI
 						rate.setText("");
 						spread.setText("");
