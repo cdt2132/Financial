@@ -28,34 +28,62 @@ public class Display implements Runnable {
 				new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" }, "default");
 		while(initial != 0){
 		if (initial == 1) {
-			int result = JOptionPane.showOptionDialog(null, "What type of report would you like to produce?",
-					"Feedback", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+			JPanel report = new JPanel(new GridLayout(0, 1));
+			
+			//Category of Report 
+			String[] category = {"Future", "Swap"};
+			JComboBox<String> categories = new JComboBox<String>(category);
+			
+			report.add(new JLabel("Product Type: "));
+			report.add(categories);
+			
+			int result = JOptionPane.showOptionDialog(null, report, "What type of report would you like to produce?",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
 					new String[] { "CSV of Trades Entered", "CSV Showing Aggregate Positions", "PnL Report" },
 					"default");
+			
 
 			// CSV of trades entered
 			if (result == 0) {
-				// New save dialog object created; displays window
-				// for user to pick a directory to save CSV report
-				SaveDialog s = new SaveDialog();
-				// Saves the filename
-				String filename = s.getName();
+				if(categories.getSelectedItem().equals("Future")){
+					//REPORT FOR FUTURE
+					// New save dialog object created; displays window
+					// for user to pick a directory to save CSV report
+					SaveDialog s = new SaveDialog();
+					// Saves the filename
+					String filename = s.getName();
 
-				System.out.println("CSV of Trades Entered");
-				db.outputTrades(filename);
+					System.out.println("CSV of Trades Entered - Futures");
+					db.outputTrades(filename);
+				}
+				else{
+					//REPORT FOR SWAP
+					SaveDialog s = new SaveDialog();
+					String filename = s.getName(); 
+					
+					System.out.println("CSV of Trades Entered - Swaps");
+					//
+				}
 			}
+			
+			
 
 			// CSV of aggregate positions
 			if (result == 1) {
-				// New save dialog object created; displays window
-				// for user to pick a directory to save CSV report
-				SaveDialog s = new SaveDialog();
+				if(categories.getSelectedItem().equals("Future")){
+					//REPORT FOR FUTURE
+					// New save dialog object created; displays window
+					// for user to pick a directory to save CSV report
+					SaveDialog s = new SaveDialog();
 
-				// Saves the filename
-				String filename = s.getName();
-
-				System.out.println("CSV Showing Aggregate Positions");
-				db.outputAggregate(filename);
+					// Saves the filename
+					String filename = s.getName();
+				
+					System.out.println("CSV Showing Aggregate Positions");
+					db.outputAggregate(filename);}
+				else{
+					//REPORT FOR SWAP
+				}
 			}
 			if (result == 2) {
 				// New save dialog object created; displays window
