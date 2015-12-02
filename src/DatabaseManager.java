@@ -507,17 +507,26 @@ public class DatabaseManager {
 	 * Flag matured swap before current date
 	 * @param curr: current date
 	 */
-	public void swapFlag(Date curr) {
+	public void setFlags(Date curr) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strSQL = "UPDATE Swaps SET ismatured = 1 WHERE termdate < '" + sdf.format(curr) + "'";
-		System.out.println(strSQL);
+		//System.out.println(strSQL);
 		updateSql(strSQL);
-		
 		strSQL = "UPDATE Swaps SET ismatured = 0 WHERE termdate >= '"+sdf.format(curr)+"'";
 		updateSql(strSQL);
-	
+		
+		strSQL = "UPDATE Orders SET ismatured = 1 WHERE maturity < '" + sdf.format(curr) + "'";
+		updateSql(strSQL);
+		strSQL = "UPDATE Orders SET ismatured = 0 WHERE maturity >= '"+sdf.format(curr)+"'";
+		updateSql(strSQL);
 	}
 
+	public void clearTrades() {
+		String strSQL = "DELETE FROM Orders;";
+		if (updateSql(strSQL))
+			System.out.println("DELETED ALL ORDERS");
+	}
+	
 	/**
 	 * Close connection to the database
 	 */

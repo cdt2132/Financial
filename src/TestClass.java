@@ -12,7 +12,9 @@ public class TestClass {
 	
 	public static void test(String[] args){
 		
+		
 		DatabaseManager db = DatabaseManager.getInstance();
+		db.clearTrades();
 		
 		Order o1 = new Order("HH",11,2015,20,Market.genMarketData(80.0), 1,0,1);
 		Order o2 = new Order("HH",11,2015,25,Market.genMarketData(80.0), 1,0,1);

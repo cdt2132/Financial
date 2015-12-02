@@ -20,21 +20,26 @@ public class EOD implements Runnable {
 				System.out.println("Roll Current Date!!!!");
 				TradeCapture.CURRENT_DATE = TradeCapture.nextBusinessDay();
 				// flag matured swaps
-				DatabaseManager.getInstance().swapFlag(TradeCapture.CURRENT_DATE);
+				DatabaseManager.getInstance().setFlags(TradeCapture.CURRENT_DATE);
 				//generate updated report
 				DatabaseManager.getInstance().MaturingTodayTrades(".");
 				DatabaseManager.getInstance().swapAggregate(".");
 				DatabaseManager.getInstance().swapAllTrades(".");
+				DatabaseManager.getInstance().outputTrades(".");
+				DatabaseManager.getInstance().outputAggregate(".");
+				DatabaseManager.getInstance().outputPnL(".");
 			}
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			DatabaseManager.getInstance().swapFlag(TradeCapture.CURRENT_DATE);
+			DatabaseManager.getInstance().setFlags(TradeCapture.CURRENT_DATE);
 
+			/*
 			System.out.println("Current_Date:"+TradeCapture.CURRENT_DATE);
 			System.out.println("Next Business Day:"+ TradeCapture.nextBusinessDay());
+			*/
 
 		}
 
