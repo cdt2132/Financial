@@ -34,12 +34,12 @@ public class Display implements Runnable {
 			String[] category = {"Future", "Swap"};
 			JComboBox<String> categories = new JComboBox<String>(category);
 			
-			report.add(new JLabel("Product Type: "));
+			report.add(new JLabel("Product Type (for Trades Entered and Aggregate Positions)"));
 			report.add(categories);
 			
 			int result = JOptionPane.showOptionDialog(null, report, "What type of report would you like to produce?",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-					new String[] { "CSV of Trades Entered", "CSV Showing Aggregate Positions", "PnL Report" },
+					new String[] { "Trades Entered", "Trades Expiring Today", "Aggregate Positions", "PnL Report" },
 					"default");
 			
 
@@ -62,39 +62,54 @@ public class Display implements Runnable {
 					String filename = s.getName(); 
 					
 					System.out.println("CSV of Trades Entered - Swaps");
-					//
+					db.swapAllTrades(filename);
 				}
 			}
 			
-			
+			if (result == 1){
+				//trades expiring today (both futures and swaps)
+				
+				SaveDialog s = new SaveDialog(); 
+				
+				String filename = s.getName(); 
+				System.out.println("CSV of trades expiring today");
+				
+				db.swapMaturingTodayTrades(filename); 
+			}
 
 			// CSV of aggregate positions
-			if (result == 1) {
+			if (result == 2) {
 				if(categories.getSelectedItem().equals("Future")){
 					//REPORT FOR FUTURE
-					// New save dialog object created; displays window
-					// for user to pick a directory to save CSV report
 					SaveDialog s = new SaveDialog();
 
 					// Saves the filename
 					String filename = s.getName();
 				
-					System.out.println("CSV Showing Aggregate Positions");
-					db.outputAggregate(filename);}
+					System.out.println("CSV Showing Aggregate Positions -- Future");
+					db.outputAggregate(filename);
+				}
 				else{
 					//REPORT FOR SWAP
+					
+					SaveDialog s = new SaveDialog(); 
+					
+					String filename = s.getName(); 
+					System.out.println("CSV Showing Aggregate Positions -- Swap ");
+					
+					db.swapAggregate(filename);
 				}
 			}
-			if (result == 2) {
-				// New save dialog object created; displays window
-				// for using to pick a directory to save PnL report
+			//PnL report 
+			if (result == 3) {
+			
+					SaveDialog s = new SaveDialog();
 
-				SaveDialog s = new SaveDialog();
+					String filename = s.getName();
 
-				String filename = s.getName();
-
-				System.out.println("PnL Report");
-				db.outputPnL(filename);
+					System.out.println("PnL Report -- Future");
+					db.outputPnL(filename);	
+				
 			}
 			initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
