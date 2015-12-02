@@ -22,7 +22,7 @@ public class EOD implements Runnable {
 				// flag matured swaps
 				DatabaseManager.getInstance().swapFlag(TradeCapture.CURRENT_DATE);
 				//generate updated report
-				DatabaseManager.getInstance().swapMaturingTodayTrades(".");
+				DatabaseManager.getInstance().MaturingTodayTrades(".");
 				DatabaseManager.getInstance().swapAggregate(".");
 				DatabaseManager.getInstance().swapAllTrades(".");
 			}

@@ -3,6 +3,8 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
 /**
  * Main class of application. 
  *
@@ -11,13 +13,13 @@ import java.util.ArrayList;
  */
 
 public class TradeCapture {
-
 	public static Date CURRENT_DATE;   // system-wide parameter Current date
 	public static ArrayList<Date> holidays;  // A list of holiday dates
 	
 	// Main function
 	public static void main(String[] args) throws SQLException, ParseException {
 		formatDates();
+		
 		// create new ExchangeListener and Display
 		(new Thread(new ExchangeListener())).start();
 		(new Thread(new Display())).start();
@@ -66,21 +68,28 @@ public class TradeCapture {
 		return date;
 	}
 	
-
-	/** 
-	 * A function to get next Three BusinessDay 
-	 * @return next three business date
+	
+	/**
+	 * Calculates date of last three business days before end of month. 
+	 * @param month
+	 * @param year
+	 * @return date
 	 */
-	public static Date nextThreeBusinessDay(){
-		Date date = TradeCapture.CURRENT_DATE;
-		int count = 0;
-		while (count<3){
-			date = new Date(date.getTime() + (1000 * 60 * 60 * 24));
-			if (isBusinessDay(date)) count = count + 1;
-		}
-		System.out.print("Next Three Buiness Day:"+ date);
-		return date;
+	public static Date getThirdBeforeEOM(int month, int year) {
 		
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(year, month-1, 1);
+			calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+			int count = 0;
+			Date date = calendar.getTime();
+			while (count < 3) {
+				// Check if date is a valid business day
+				 if (isBusinessDay(date)) {
+					 count++;
+				 }
+				 date = new Date(date.getTime() - (1000*60*60*24));
+			}
+			return date;
 	}
 	
 	/** To judge whether the date is business day

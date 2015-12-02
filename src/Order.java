@@ -37,6 +37,7 @@ public class Order{
 	 * @param s futures symbol (from CME)
 	 * @param m expiry month
 	 * @param y expiry year
+	 * @param expdate expiry date
 	 * @param l lot size
 	 * @param p future price
 	 * @param b buy or sell (1 or -1)
@@ -53,6 +54,7 @@ public class Order{
 		orderType = ot;
 		trader = t;
 		date = new Date();
+		
 	}
 
 	/** Prints the order */

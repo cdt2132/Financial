@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.awt.GridLayout;
 import javax.swing.*;
+import java.util.Date;
 
 import com.sun.media.sound.Toolkit;
 
@@ -74,7 +75,7 @@ public class Display implements Runnable {
 				String filename = s.getName(); 
 				System.out.println("CSV of trades expiring today");
 				
-				db.swapMaturingTodayTrades(filename); 
+				db.MaturingTodayTrades(filename); 
 			}
 
 			// CSV of aggregate positions
@@ -295,8 +296,6 @@ public class Display implements Runnable {
 			swap.add(startMonth);
 			swap.add(new JLabel("Year of Start Date"));
 			swap.add(startYear);
-			swap.add(new JLabel("Day of Termination Date"));
-			swap.add(termDay); 
 			swap.add(new JLabel("Month of Termination Date"));
 			swap.add(termMonth);
 			swap.add(new JLabel("Year of Termination Date"));
@@ -377,10 +376,12 @@ public class Display implements Runnable {
 						int sd = (Integer) startDay.getSelectedItem(); 
 						int sm = (Integer) startMonth.getSelectedItem(); 
 						int sy = (Integer) startYear.getSelectedItem(); 
-						int td = (Integer) termDay.getSelectedItem(); 
 						int tm = (Integer) termMonth.getSelectedItem(); 
 						int ty = (Integer) termYear.getSelectedItem(); 
 						
+						Date termDate = TradeCapture.getThirdBeforeEOM(tm, ty);
+						int td = termDate.getDay();
+
 						/* Creating a swap object */ 
 						Swap o = new Swap(sd, sm, sy, td, tm, ty, r, s, fr, whoFloat.getSelectedItem().toString(),whoFix.getSelectedItem().toString(),t);
 						o.printSwap();

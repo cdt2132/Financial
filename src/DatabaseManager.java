@@ -143,12 +143,15 @@ public class DatabaseManager {
 	 */
 	public boolean insertOrder(Order o) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 
+		Date date = TradeCapture.getThirdBeforeEOM(o.expMonth, o.expYear);
+		
 		// insert order into database
 		String strSQL = "INSERT INTO Trades(" + "symbol, " + "ordertime, " + "expMonth, " + "expYear, " + "lot, "
-				+ "price, " + "buy, " + "trader) " + "VALUES ( " + "'" + o.symbol + "', " + "'"
+				+ "price, " + "buy, " + "trader, " + "maturity) " + "VALUES ( " + "'" + o.symbol + "', " + "'"
 				+ dateFormat.format(o.date) + "', " + o.expMonth + ", " + o.expYear + ", " + o.lots + ", " + o.price
-				+ ", " + o.buySell + ", " + o.trader + ")";
+				+ ", " + o.buySell + ", " + o.trader + ", " + dateFormat.format(date) + ")";
 		System.out.println(strSQL);
 		if (updateSql(strSQL))
 			return true;
@@ -423,19 +426,28 @@ public class DatabaseManager {
 	/**Generate report of swaps maturing today
 	 * @param filepath
 	 */
-	public void swapMaturingTodayTrades(String filepath) {
+	public void MaturingTodayTrades(String filepath) {
 		try {
 			String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
 					.format(new Timestamp(System.currentTimeMillis()));
-			String filename = filepath + "/" + timeStamp + "swapTodayMaturingTrades.csv";
+			String filename = filepath + "/" + timeStamp + "TodaysMaturingTrades.csv";
 			System.out.println(filename);
-
-			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
+			writer.println("FUTURES");
+			ResultSet rs = getResult("SELECT * FROM Trades WHERE maturity ='" + sdf.format(TradeCapture.CURRENT_DATE) + "';");
+			writer.println("Symbol, orderTime, expMonth, expYear, lot, price, buy, trader");
 
-			ResultSet rs = getResult("SELECT * FROM Swaps WHERE termdate ='" + sdf.format(TradeCapture.CURRENT_DATE) + "';");
-			
+			// print all rows in result set
+			while (rs.next()) {
+				writer.println(rs.getString("symbol") + ", " + rs.getString("ordertime") + ", "
+						+ rs.getString("expMonth") + ", " + rs.getString("expYear") + ", " + rs.getString("lot") + ", "
+						+ rs.getString("price") + ", " + rs.getString("buy") + ", " + rs.getString("trader") + ", ");
+			}
+
+			rs = getResult("SELECT * FROM Swaps WHERE termdate ='" + sdf.format(TradeCapture.CURRENT_DATE) + "';");
+			writer.println("SWAPS");
 			writer.println("startdate, termdate, fixedrate,floatrate,floatratespread,swaptime,payerfloat,payerfixed,trader,isMatured");
 
 			// print all rows in Trades table
