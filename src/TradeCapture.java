@@ -19,7 +19,8 @@ public class TradeCapture {
 	// Main function
 	public static void main(String[] args) throws SQLException, ParseException {
 		formatDates();
-		
+		Date date1 = getThirdBeforeEOM(12, 2015);
+		System.out.println(date1.toString());
 		// create new ExchangeListener and Display
 		(new Thread(new ExchangeListener())).start();
 		(new Thread(new Display())).start();

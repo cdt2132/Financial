@@ -19,7 +19,7 @@ public class EOD implements Runnable {
 			if (TradeCapture.nextBusinessDay().compareTo(new Date()) <= 0){
 				System.out.println("Roll Current Date!!!!");
 				TradeCapture.CURRENT_DATE = TradeCapture.nextBusinessDay();
-				// flag matured swaps
+				// flag matured orders and swaps
 				DatabaseManager.getInstance().setFlags(TradeCapture.CURRENT_DATE);
 				//generate updated report
 				DatabaseManager.getInstance().MaturingTodayTrades(".");
@@ -43,6 +43,26 @@ public class EOD implements Runnable {
 
 		}
 
+	}
+	
+	public static void TestRollDate() {
+		
+		// Test December orders
+		TradeCapture.CURRENT_DATE = TradeCapture.getThirdBeforeEOM(12, 2015);
+		
+		// Generate report for pre-date roll
+		DatabaseManager.getInstance().MaturingTodayTrades(".");
+		
+		// Roll the date
+		TradeCapture.CURRENT_DATE = TradeCapture.nextBusinessDay();
+		System.out.println("ROLLED THE DATE TO: " + TradeCapture.CURRENT_DATE.toString());
+		
+		// flag matured orders and swaps
+		DatabaseManager.getInstance().setFlags(TradeCapture.CURRENT_DATE);
+		
+		// Generate report for post-date roll (should have no trades..) 
+		DatabaseManager.getInstance().MaturingTodayTrades(".");
+		
 	}
 
 }

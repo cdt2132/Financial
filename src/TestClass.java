@@ -10,7 +10,7 @@ import quickfix.ConfigError;
 
 public class TestClass {	
 	
-	public static void test(String[] args){
+	public static void main(String[] args){
 		
 		
 		DatabaseManager db = DatabaseManager.getInstance();
@@ -28,18 +28,32 @@ public class TestClass {
 		Order o9 = new Order("NN",3,2016,38,Market.genMarketData(90.0), 1,0,2);
 		Order o10 = new Order("NN",3,2016,19,Market.genMarketData(90.0), 1,0,1);
 
-		Order o11 = new Order("NG",5,2016,21,Market.genMarketData(60.0), 1,0,1);
-		Order o12 = new Order("NG",5,2016,19,Market.genMarketData(60.0), 1,0,3);
-		Order o13 = new Order("NG",10,2015,27,Market.genMarketData(60.0), -1,0,4);
-		Order o14 = new Order("NG",10,2015,26,Market.genMarketData(60.0), -1,0,4);
-		Order o15 = new Order("NG",10,2015,40,Market.genMarketData(90.0), -1,0,5);
+		Order o11 = new Order("NG",12,2015,21,Market.genMarketData(60.0), 1,0,1);
+		Order o12 = new Order("NG",12,2015,19,Market.genMarketData(60.0), 1,0,3);
+		Order o13 = new Order("NG",12,2015,27,Market.genMarketData(60.0), -1,0,4);
+		Order o14 = new Order("NG",12,2015,26,Market.genMarketData(60.0), -1,0,4);
+		Order o15 = new Order("NG",12,2015,40,Market.genMarketData(90.0), -1,0,5);
 	
-		Order o16 = new Order("LN",4,2016,45,Market.genMarketData(100.0), 1,0,5);
-		Order o17 = new Order("LN",4,2016,11,Market.genMarketData(100.0), 1,0,2);
-		Order o18 = new Order("LN",1,2016,13,Market.genMarketData(100.0), 1,0,2);
-		Order o19 = new Order("LN",1,2016,40,Market.genMarketData(100.0), -1,0,3);
-		Order o20 = new Order("LN",1,2016,37,Market.genMarketData(100.0), -1,0,1);
+		Order o16 = new Order("LN",12,2015,45,Market.genMarketData(100.0), 1,0,5);
+		Order o17 = new Order("LN",12,2015,11,Market.genMarketData(100.0), 1,0,2);
+		Order o18 = new Order("LN",12,2015,13,Market.genMarketData(100.0), 1,0,2);
+		Order o19 = new Order("LN",12,2015,40,Market.genMarketData(100.0), -1,0,3);
+		Order o20 = new Order("LN",12,2015,37,Market.genMarketData(100.0), -1,0,1);
 
+		Swap s0 = new Swap(1, 1, 2015, 28, 12, 2015, .00, .005, .115, "JPM", "UBS", 1);
+		Swap s1 = new Swap(1, 1, 2015, 28, 12, 2015, .01, .005, .95, "JPM", "UBS", 2);
+		Swap s2 = new Swap(1, 1, 2015, 28, 12, 2015, .02, .005, .85, "JPM", "UBS", 3);
+		Swap s3 = new Swap(1, 1, 2015, 28, 12, 2015, .03, .005, .75, "JPM", "UBS", 4);
+		Swap s4 = new Swap(1, 1, 2015, 28, 12, 2015, .04, .005, .65, "JPM", "UBS", 5);
+		
+		Swap s5 = new Swap(1, 1, 2015, 28, 12, 2015, .05, .005, .55, "JPM", "UBS", 6);	
+		Swap s6 = new Swap(1, 1, 2015, 28, 12, 2015, .06, .005, .45, "JPM", "UBS", 7);
+		Swap s7 = new Swap(1, 1, 2015, 28, 12, 2015, .07, .005, .35, "JPM", "UBS", 8);
+		Swap s8 = new Swap(1, 1, 2015, 28, 12, 2015, .08, .005, .25, "JPM", "UBS", 9);
+		Swap s9 = new Swap(1, 1, 2015, 28, 12, 2015, .09, .005, .15, "JPM", "UBS", 10);
+		
+		
+		
 		db.insertOrder(o1);
 		db.insertOrder(o2);
 		db.insertOrder(o3);
@@ -64,12 +78,13 @@ public class TestClass {
 		db.insertOrder(o19);
 		db.insertOrder(o20);
 		
+		
 		db.outputTrades("./");
 		db.outputAggregate("./");
 		db.outputPnL("./");
 	}
 	
-	public static void main(String[] args){
+	public static void test(String[] args){
 		
 	
 		/* Start application */
