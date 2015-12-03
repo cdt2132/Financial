@@ -19,8 +19,7 @@ public class TradeCapture {
 	// Main function
 	public static void main(String[] args) throws SQLException, ParseException {
 		formatDates();
-		Date date1 = getThirdBeforeEOM(12, 2015);
-		System.out.println(date1.toString());
+		
 		// create new ExchangeListener and Display
 		(new Thread(new ExchangeListener())).start();
 		(new Thread(new Display())).start();
@@ -32,10 +31,13 @@ public class TradeCapture {
 	 * Add holiday date to arraylist
 	 */
 	public static void formatDates() throws ParseException {
+		
+		// Instantiate holidays
 		CURRENT_DATE = new Date();
 		holidays = new ArrayList<Date>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	
+		// Add holidays to the ArrayList holiday calendar
 		holidays.add((Date) sdf.parse("01/01/2015"));
 		holidays.add((Date) sdf.parse("19/01/2015"));
 		holidays.add((Date) sdf.parse("16/02/2015"));
@@ -63,6 +65,7 @@ public class TradeCapture {
 	 */
 	public static Date nextBusinessDay(){
 		Date date = TradeCapture.CURRENT_DATE;
+		// Increment date until we find a valid business date
 		do{
 			date = new Date(date.getTime() + (1000 * 60 * 60 * 24));
 		}while (!isBusinessDay(date));
@@ -79,8 +82,14 @@ public class TradeCapture {
 	public static Date getThirdBeforeEOM(int month, int year) {
 		
 			Calendar calendar = Calendar.getInstance();
+			
+			// set date to current date
 			calendar.set(year, month-1, 1);
+			
+			// get EOM
 			calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+			
+			// get three days before
 			int count = 0;
 			Date date = calendar.getTime();
 			while (count < 3) {
@@ -98,8 +107,11 @@ public class TradeCapture {
 	 * @return true if it is business day, otherwise return false
 	 */
 	public static boolean isBusinessDay(Date date){
+		// return false if weekend
 		if (date.getDay()==6 || date.getDay() ==0)
 			return false;
+		
+		// return false if holiday
 		if (TradeCapture.holidays.contains(date))
 			return false;
 		return true;
