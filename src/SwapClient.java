@@ -13,65 +13,71 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public class SwapClient implements Runnable, MessageListener {
-
+public class SwapClient implements MessageListener {
+	
 	private static int ackMode;
-	private static String clientQueueName;
+	private static String messageQueueName;
+	private Session session;
 	private boolean transacted = false;
-	private MessageProducer producer;
+	private MessageProducer replyProducer;
 
 	static {
-		clientQueueName = "client.messages";
+		messageQueueName = "client.messages";
 		ackMode = Session.AUTO_ACKNOWLEDGE;
 	}
+	
+	public SwapClient() {
 
-	public void run() {
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");
+		Connection connection;
 		try {
-			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");
-			Connection connection;
 			connection = connectionFactory.createConnection();
 			connection.start();
-			Session session = connection.createSession(transacted, ackMode);
-			Destination adminQueue = session.createQueue(clientQueueName);
-			// Setup a message producer to send message to the queue the server
-			// is consuming from
-			this.producer = session.createProducer(adminQueue);
-			this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-			// Create a temporary queue that this client will listen for
-			// responses on then create a consumer
-			// that consumes message from this temporary queue...for a real
-			// application a client should reuse
-			// the same temp queue for each message to the server...one temp
-			// queue per client
-			Destination tempDest = session.createTemporaryQueue();
-			MessageConsumer responseConsumer = session.createConsumer(tempDest);
-			// This class will handle the messages to the temp queue as well
-			responseConsumer.setMessageListener(this);
-			// Now create the actual message you want to send
-			TextMessage txtMessage = session.createTextMessage();
-			txtMessage.setText("Client Swap");
+			this.session = connection.createSession(this.transacted, ackMode);
+			Destination adminQueue = this.session.createQueue(messageQueueName);
 
-			// Set the reply to field to the temp queue you created above, this
-			// is the queue the server
-			// will respond to
-			txtMessage.setJMSReplyTo(tempDest);
-			this.producer.send(txtMessage);
+			// Setup a message producer to respond to messages from clients, we
+			// will get the destination
+			// to send to from the JMSReplyTo header field from a Message
+			this.replyProducer = this.session.createProducer(null);
+			this.replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+			// Set up a consumer to consume messages off of the admin queue
+			MessageConsumer consumer = this.session.createConsumer(adminQueue);
+			consumer.setMessageListener(this);
 		} catch (JMSException e) {
 			// Handle the exception appropriately
 		}
 
 	}
 
-	public void onMessage(Message message) {
-		String messageText = null;
-		try {
-			if (message instanceof TextMessage) {
-				TextMessage textMessage = (TextMessage) message;
-				messageText = textMessage.getText();
-				System.out.println("Response from Exchange = " + messageText);
-			}
-		}catch(JMSException e){
-		}
+	public synchronized void onException(JMSException ex) {
+		System.out.println("JMS Exception occured.  Shutting down client.");
 	}
 
+	public void onMessage(javax.jms.Message message) {
+		try {
+			
+			System.out.println("From Exchange:" + ((TextMessage) message).getText());
+			if (message instanceof TextMessage) {
+				TextMessage txtMsg = (TextMessage) message;
+				String messageText = txtMsg.getText();
+				
+				//Accepting all request consent from exchange
+				if (messageText == "Request Consent"){
+					TextMessage response = this.session.createTextMessage();
+					response.setText("Consent!");
+					this.replyProducer.send(message.getJMSReplyTo(), response);
+				}
+				
+				//Accepting all request consent from exchange
+				if (messageText == "Clearing Confirm"){
+					//insert trade into database
+					
+				}
+			}	
+			
+		} catch (JMSException e) {
+			// Handle the exception appropriately
+		}
+	}
 }

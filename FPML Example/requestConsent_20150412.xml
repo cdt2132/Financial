@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cme:FpML xmlns="http://www.fpml.org/FpML-5/confirmation" xmlns:cme="http://www.cmegroup.com/otc-clearing/confirmation" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+	<cme:requestConsent fpmlVersion="5-0">
+		<header>
+			<messageId messageIdScheme="cme_message_id">0103664109</messageId>
+			<sentBy messageAddressScheme="cme_clearingorg_id">CME</sentBy>
+			<sendTo messageAddressScheme="cme_firm_id">010</sendTo>
+			<sendTo messageAddressScheme="cme_exchange_id">CME</sendTo>
+			<creationTimestamp>2015-04-10T00:49:40-05:00</creationTimestamp>
+		</header>
+		<isCorrection>false</isCorrection>
+		<correlationId correlationIdScheme="cme_trade_id">3674100</correlationId>
+		<sequenceNumber>1</sequenceNumber>
+		<trade>
+			<tradeHeader xsi:type="cme:CMETradeHeader" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				<partyTradeIdentifier>
+					<partyReference href="clearing_service"/>
+					<tradeId tradeIdScheme="cme_trade_id">3664109</tradeId>
+					<tradeId tradeIdScheme="client_trade_id">Offshore1A</tradeId>
+					<tradeId tradeIdScheme="platform_trade_id">FIT:20150410:99:99:99:99</tradeId>
+					<tradeId tradeIdScheme="block_trade_id">FIT:20150410:99:99:99:20</tradeId>
+				</partyTradeIdentifier>
+				<partyTradeInformation>
+					<partyReference href="clearing_firm"/>
+					<accountReference href="account1"/>
+					<relatedParty>
+						<partyReference href="trade_source"/>
+						<role>InputSource</role>
+					</relatedParty>
+					<category categoryScheme="cme_origin_code">HOUS</category>
+				</partyTradeInformation>
+				<tradeDate>2015-04-10</tradeDate>
+				<cme:originatingEvent>NEW_TRADE</cme:originatingEvent>
+				<cme:status>ALLEGED</cme:status>
+				<cme:universalSwapIdentifier>
+					<cme:issuer issuerIdScheme="cftc_Namespace">1010000023</cme:issuer>
+					<cme:usi usiScheme="reg_trade_id">CCCIRS3664109</cme:usi>
+				</cme:universalSwapIdentifier>
+				<cme:creditLimitInformation>
+					<cme:limitApplicable>
+						<cme:level creditLimitLevelScheme="creditLimitLevelScheme">HOUS</cme:level>
+						<cme:limitType creditLimitTypeScheme="http://www.fpml.org/coding-scheme/credit-limit-type">PV01</cme:limitType>
+						<cme:limitAmount>35000000</cme:limitAmount>
+						<cme:amountUtilized>-9999</cme:amountUtilized>
+						<cme:amountRemaining>34990001</cme:amountRemaining>
+						<cme:limitImpactDueToTrade>-14482</cme:limitImpactDueToTrade>
+						<cme:currency currencyScheme="http://www.fpml.org/ext/iso4217-2001-08-15">USD</cme:currency>
+					</cme:limitApplicable>
+				</cme:creditLimitInformation>
+			</tradeHeader>
+			<swap>
+				<swapStream id="floatLeg">
+					<payerPartyReference href="clearing_firm"/>
+					<payerAccountReference href="account1"/>
+					<receiverPartyReference href="clearing_service"/>
+					<calculationPeriodDates id="floatingCalcPeriodDates">
+						<effectiveDate>
+							<unadjustedDate>2015-04-13</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>NONE</businessDayConvention>
+							</dateAdjustments>
+						</effectiveDate>
+						<terminationDate>
+							<unadjustedDate>2021-04-13</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>MODFOLLOWING</businessDayConvention>
+								<businessCentersReference href="floatPrimaryBusinessCenters"/>
+							</dateAdjustments>
+						</terminationDate>
+						<calculationPeriodDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCentersReference href="floatPrimaryBusinessCenters"/>
+						</calculationPeriodDatesAdjustments>
+						<calculationPeriodFrequency>
+							<periodMultiplier>6</periodMultiplier>
+							<period>M</period>
+							<rollConvention>13</rollConvention>
+						</calculationPeriodFrequency>
+					</calculationPeriodDates>
+					<paymentDates>
+						<calculationPeriodDatesReference href="floatingCalcPeriodDates"/>
+						<paymentFrequency>
+							<periodMultiplier>6</periodMultiplier>
+							<period>M</period>
+						</paymentFrequency>
+						<payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+						<paymentDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCenters id="floatPrimaryBusinessCenters">
+								<businessCenter>AUSY</businessCenter>
+							</businessCenters>
+						</paymentDatesAdjustments>
+					</paymentDates>
+					<resetDates id="floatingLegResetDates">
+						<calculationPeriodDatesReference href="floatingCalcPeriodDates"/>
+						<resetRelativeTo>CalculationPeriodStartDate</resetRelativeTo>
+						<fixingDates>
+							<periodMultiplier>0</periodMultiplier>
+							<period>D</period>
+							<businessDayConvention>PRECEDING</businessDayConvention>
+							<businessCenters>
+								<businessCenter>AUSY</businessCenter>
+							</businessCenters>
+							<dateRelativeTo href="floatingLegResetDates"/>
+						</fixingDates>
+						<resetFrequency>
+							<periodMultiplier>6</periodMultiplier>
+							<period>M</period>
+						</resetFrequency>
+						<resetDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCentersReference href="floatPrimaryBusinessCenters"/>
+						</resetDatesAdjustments>
+					</resetDates>
+					<calculationPeriodAmount>
+						<calculation>
+							<notionalSchedule>
+								<notionalStepSchedule>
+									<initialValue>33600000.00</initialValue>
+									<currency>AUD</currency>
+								</notionalStepSchedule>
+							</notionalSchedule>
+							<floatingRateCalculation>
+								<floatingRateIndex>AUD-BBR-BBSW</floatingRateIndex>
+								<indexTenor>
+									<periodMultiplier>6</periodMultiplier>
+									<period>M</period>
+								</indexTenor>
+							</floatingRateCalculation>
+							<dayCountFraction>ACT/365.FIXED</dayCountFraction>
+						</calculation>
+					</calculationPeriodAmount>
+					<cashflows>
+						<cashflowsMatchParameters>true</cashflowsMatchParameters>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2015-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2015-04-13</adjustedStartDate>
+								<adjustedEndDate>2015-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2015-04-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2016-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2015-10-13</adjustedStartDate>
+								<adjustedEndDate>2016-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2015-10-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2016-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2016-04-13</adjustedStartDate>
+								<adjustedEndDate>2016-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2016-04-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2017-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2016-10-13</adjustedStartDate>
+								<adjustedEndDate>2017-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2016-10-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2017-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2017-04-13</adjustedStartDate>
+								<adjustedEndDate>2017-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2017-04-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2018-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2017-10-13</adjustedStartDate>
+								<adjustedEndDate>2018-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2017-10-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2018-10-15</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2018-04-13</adjustedStartDate>
+								<adjustedEndDate>2018-10-15</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2018-04-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2019-04-15</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2018-10-15</adjustedStartDate>
+								<adjustedEndDate>2019-04-15</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2018-10-15</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2019-10-14</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2019-04-15</adjustedStartDate>
+								<adjustedEndDate>2019-10-14</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2019-04-15</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2020-04-14</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2019-10-14</adjustedStartDate>
+								<adjustedEndDate>2020-04-14</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2019-10-14</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2020-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2020-04-14</adjustedStartDate>
+								<adjustedEndDate>2020-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2020-04-14</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2021-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2020-10-13</adjustedStartDate>
+								<adjustedEndDate>2021-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2020-10-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+					</cashflows>
+				</swapStream>
+				<swapStream id="fixedLeg">
+					<payerPartyReference href="clearing_service"/>
+					<receiverPartyReference href="clearing_firm"/>
+					<receiverAccountReference href="account1"/>
+					<calculationPeriodDates id="fixedCalcPeriodDates">
+						<effectiveDate>
+							<unadjustedDate>2015-04-13</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>NONE</businessDayConvention>
+							</dateAdjustments>
+						</effectiveDate>
+						<terminationDate>
+							<unadjustedDate>2021-04-13</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>MODFOLLOWING</businessDayConvention>
+								<businessCentersReference href="fixedPrimaryBusinessCenters"/>
+							</dateAdjustments>
+						</terminationDate>
+						<calculationPeriodDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCentersReference href="fixedPrimaryBusinessCenters"/>
+						</calculationPeriodDatesAdjustments>
+						<calculationPeriodFrequency>
+							<periodMultiplier>6</periodMultiplier>
+							<period>M</period>
+							<rollConvention>13</rollConvention>
+						</calculationPeriodFrequency>
+					</calculationPeriodDates>
+					<paymentDates>
+						<calculationPeriodDatesReference href="fixedCalcPeriodDates"/>
+						<paymentFrequency>
+							<periodMultiplier>6</periodMultiplier>
+							<period>M</period>
+						</paymentFrequency>
+						<payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+						<paymentDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCenters id="fixedPrimaryBusinessCenters">
+								<businessCenter>AUSY</businessCenter>
+							</businessCenters>
+						</paymentDatesAdjustments>
+					</paymentDates>
+					<calculationPeriodAmount>
+						<calculation>
+							<notionalSchedule>
+								<notionalStepSchedule>
+									<initialValue>33600000.00</initialValue>
+									<currency>AUD</currency>
+								</notionalStepSchedule>
+							</notionalSchedule>
+							<fixedRateSchedule>
+								<initialValue>0.02409</initialValue>
+							</fixedRateSchedule>
+							<dayCountFraction>ACT/365.FIXED</dayCountFraction>
+						</calculation>
+					</calculationPeriodAmount>
+					<cashflows>
+						<cashflowsMatchParameters>true</cashflowsMatchParameters>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2015-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2015-04-13</adjustedStartDate>
+								<adjustedEndDate>2015-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2016-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2015-10-13</adjustedStartDate>
+								<adjustedEndDate>2016-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2016-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2016-04-13</adjustedStartDate>
+								<adjustedEndDate>2016-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2017-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2016-10-13</adjustedStartDate>
+								<adjustedEndDate>2017-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2017-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2017-04-13</adjustedStartDate>
+								<adjustedEndDate>2017-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2018-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2017-10-13</adjustedStartDate>
+								<adjustedEndDate>2018-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2018-10-15</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2018-04-13</adjustedStartDate>
+								<adjustedEndDate>2018-10-15</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2019-04-15</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2018-10-15</adjustedStartDate>
+								<adjustedEndDate>2019-04-15</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2019-10-14</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2019-04-15</adjustedStartDate>
+								<adjustedEndDate>2019-10-14</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2020-04-14</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2019-10-14</adjustedStartDate>
+								<adjustedEndDate>2020-04-14</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2020-10-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2020-04-14</adjustedStartDate>
+								<adjustedEndDate>2020-10-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2021-04-13</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2020-10-13</adjustedStartDate>
+								<adjustedEndDate>2021-04-13</adjustedEndDate>
+								<notionalAmount>33600000.00</notionalAmount>
+								<fixedRate>0.02409</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+					</cashflows>
+				</swapStream>
+			</swap>
+		</trade>
+		<cme:quote>
+			<value>-18828.14</value>
+			<measureType assetMeasureScheme="http://www.fpml.org/coding-scheme/asset-measure">ParallelShiftInterestRateSensitivity</measureType>
+			<currency>AUD</currency>
+		</cme:quote>
+		<cme:quote>
+			<value>-37246.51</value>
+			<measureType>NPV</measureType>
+			<currency>AUD</currency>
+		</cme:quote>
+		<party id="clearing_firm">
+			<partyId partyIdScheme="clearing_member_firms">010</partyId>
+		</party>
+		<party id="clearing_service">
+			<partyId>CME</partyId>
+		</party>
+		<party id="trade_source">
+			<partyId>BLOOMBERG</partyId>
+		</party>
+		<account id="account1">
+			<accountId accountIdScheme="clearing_firm_accounts">010CMETEST</accountId>
+			<servicingParty href="clearing_firm"/>
+		</account>
+		<cme:limitReport>
+			<cme:description>Risk Filter Limits set at CME exceeded</cme:description>
+			<cme:status>Exceeded</cme:status>
+			<cme:severity>High</cme:severity>
+		</cme:limitReport>
+	</cme:requestConsent>
+</cme:FpML>

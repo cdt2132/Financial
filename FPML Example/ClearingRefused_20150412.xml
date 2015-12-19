@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cme:FpML xmlns="http://www.fpml.org/FpML-5/confirmation" xmlns:cme="http://www.cmegroup.com/otc-clearing/confirmation" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">
+	<clearingRefused fpmlVersion="5-0">
+		<header>
+			<messageId messageIdScheme="cme_message_id">0103584999</messageId>
+			<sentBy messageAddressScheme="cme_clearingorg_id">CME</sentBy>
+			<sendTo messageAddressScheme="cme_firm_id">010</sendTo>
+			<sendTo messageAddressScheme="cme_exchange_id">CME</sendTo>
+			<creationTimestamp>2015-04-10T04:03:57-05:00</creationTimestamp>
+		</header>
+		<correlationId correlationIdScheme="cme_trade_id">3584010</correlationId>
+		<sequenceNumber>1</sequenceNumber>
+		<trade>
+			<tradeHeader>
+				<partyTradeIdentifier>
+					<partyReference href="clearing_service"/>
+					<tradeId tradeIdScheme="cme_trade_id">3577077</tradeId>
+					<tradeId tradeIdScheme="client_trade_id">Sample12345</tradeId>
+					<tradeId tradeIdScheme="platform_trade_id">PlatformTestID</tradeId>
+					<tradeId tradeIdScheme="block_trade_id">PlatformBlockTestID</tradeId>
+				</partyTradeIdentifier>
+				<partyTradeInformation>
+					<partyReference href="clearing_firm"/>
+					<accountReference href="account1"/>
+					<relatedParty>
+						<partyReference href="trade_source"/>
+						<role>InputSource</role>
+					</relatedParty>
+					<category categoryScheme="cme_origin_code">CUST</category>
+				</partyTradeInformation>
+				<tradeDate>2015-04-10</tradeDate>
+			</tradeHeader>
+			<swap>
+				<swapStream id="floatLeg">
+					<payerPartyReference href="clearing_firm"/>
+					<payerAccountReference href="account1"/>
+					<receiverPartyReference href="clearing_service"/>
+					<calculationPeriodDates id="floatingCalcPeriodDates">
+						<effectiveDate>
+							<unadjustedDate>2015-04-14</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>NONE</businessDayConvention>
+							</dateAdjustments>
+						</effectiveDate>
+						<terminationDate>
+							<unadjustedDate>2015-10-14</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>MODFOLLOWING</businessDayConvention>
+								<businessCentersReference href="floatPrimaryBusinessCenters"/>
+							</dateAdjustments>
+						</terminationDate>
+						<calculationPeriodDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCentersReference href="floatPrimaryBusinessCenters"/>
+						</calculationPeriodDatesAdjustments>
+						<calculationPeriodFrequency>
+							<periodMultiplier>1</periodMultiplier>
+							<period>T</period>
+							<rollConvention>NONE</rollConvention>
+						</calculationPeriodFrequency>
+					</calculationPeriodDates>
+					<paymentDates>
+						<calculationPeriodDatesReference href="floatingCalcPeriodDates"/>
+						<paymentFrequency>
+							<periodMultiplier>1</periodMultiplier>
+							<period>T</period>
+						</paymentFrequency>
+						<payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+						<paymentDaysOffset>
+							<periodMultiplier>1</periodMultiplier>
+							<period>D</period>
+							<dayType>Business</dayType>
+						</paymentDaysOffset>
+						<paymentDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCenters id="floatPrimaryBusinessCenters">
+								<businessCenter>EUTA</businessCenter>
+							</businessCenters>
+						</paymentDatesAdjustments>
+					</paymentDates>
+					<resetDates id="floatingLegResetDates">
+						<calculationPeriodDatesReference href="floatingCalcPeriodDates"/>
+						<resetRelativeTo>CalculationPeriodEndDate</resetRelativeTo>
+						<fixingDates>
+							<periodMultiplier>0</periodMultiplier>
+							<period>D</period>
+							<businessDayConvention>PRECEDING</businessDayConvention>
+							<businessCenters>
+								<businessCenter>EUTA</businessCenter>
+							</businessCenters>
+							<dateRelativeTo href="floatingLegResetDates"/>
+						</fixingDates>
+						<resetFrequency>
+							<periodMultiplier>1</periodMultiplier>
+							<period>T</period>
+						</resetFrequency>
+						<resetDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCentersReference href="floatPrimaryBusinessCenters"/>
+						</resetDatesAdjustments>
+					</resetDates>
+					<calculationPeriodAmount>
+						<calculation>
+							<notionalSchedule>
+								<notionalStepSchedule>
+									<initialValue>2.00</initialValue>
+									<currency>EUR</currency>
+								</notionalStepSchedule>
+							</notionalSchedule>
+							<floatingRateCalculation>
+								<floatingRateIndex>EUR-EONIA-OIS-COMPOUND</floatingRateIndex>
+							</floatingRateCalculation>
+							<dayCountFraction>ACT/360</dayCountFraction>
+						</calculation>
+					</calculationPeriodAmount>
+					<cashflows>
+						<cashflowsMatchParameters>true</cashflowsMatchParameters>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2015-10-15</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2015-04-14</adjustedStartDate>
+								<adjustedEndDate>2015-10-14</adjustedEndDate>
+								<notionalAmount>2.00</notionalAmount>
+								<floatingRateDefinition>
+									<rateObservation>
+										<adjustedFixingDate>2015-10-13</adjustedFixingDate>
+										<observedRate>0</observedRate>
+									</rateObservation>
+								</floatingRateDefinition>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+					</cashflows>
+				</swapStream>
+				<swapStream id="fixedLeg">
+					<payerPartyReference href="clearing_service"/>
+					<receiverPartyReference href="clearing_firm"/>
+					<receiverAccountReference href="account1"/>
+					<calculationPeriodDates id="fixedCalcPeriodDates">
+						<effectiveDate>
+							<unadjustedDate>2015-04-14</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>NONE</businessDayConvention>
+							</dateAdjustments>
+						</effectiveDate>
+						<terminationDate>
+							<unadjustedDate>2015-10-14</unadjustedDate>
+							<dateAdjustments>
+								<businessDayConvention>MODFOLLOWING</businessDayConvention>
+								<businessCentersReference href="fixedPrimaryBusinessCenters"/>
+							</dateAdjustments>
+						</terminationDate>
+						<calculationPeriodDatesAdjustments>
+							<businessDayConvention>NONE</businessDayConvention>
+							<businessCentersReference href="fixedPrimaryBusinessCenters"/>
+						</calculationPeriodDatesAdjustments>
+						<calculationPeriodFrequency>
+							<periodMultiplier>1</periodMultiplier>
+							<period>T</period>
+							<rollConvention>NONE</rollConvention>
+						</calculationPeriodFrequency>
+					</calculationPeriodDates>
+					<paymentDates>
+						<calculationPeriodDatesReference href="fixedCalcPeriodDates"/>
+						<paymentFrequency>
+							<periodMultiplier>1</periodMultiplier>
+							<period>T</period>
+						</paymentFrequency>
+						<payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+						<paymentDaysOffset>
+							<periodMultiplier>1</periodMultiplier>
+							<period>D</period>
+							<dayType>Business</dayType>
+						</paymentDaysOffset>
+						<paymentDatesAdjustments>
+							<businessDayConvention>MODFOLLOWING</businessDayConvention>
+							<businessCenters id="fixedPrimaryBusinessCenters">
+								<businessCenter>EUTA</businessCenter>
+							</businessCenters>
+						</paymentDatesAdjustments>
+					</paymentDates>
+					<calculationPeriodAmount>
+						<calculation>
+							<notionalSchedule>
+								<notionalStepSchedule>
+									<initialValue>2.00</initialValue>
+									<currency>EUR</currency>
+								</notionalStepSchedule>
+							</notionalSchedule>
+							<fixedRateSchedule>
+								<initialValue>0.01</initialValue>
+							</fixedRateSchedule>
+							<dayCountFraction>ACT/360</dayCountFraction>
+						</calculation>
+					</calculationPeriodAmount>
+					<cashflows>
+						<cashflowsMatchParameters>true</cashflowsMatchParameters>
+						<paymentCalculationPeriod>
+							<adjustedPaymentDate>2015-10-15</adjustedPaymentDate>
+							<calculationPeriod>
+								<adjustedStartDate>2015-04-14</adjustedStartDate>
+								<adjustedEndDate>2015-10-14</adjustedEndDate>
+								<notionalAmount>2.00</notionalAmount>
+								<fixedRate>0.01</fixedRate>
+							</calculationPeriod>
+						</paymentCalculationPeriod>
+					</cashflows>
+				</swapStream>
+			</swap>
+		</trade>
+		<party id="clearing_firm">
+			<partyId partyIdScheme="clearing_member_firms">010</partyId>
+		</party>
+		<party id="clearing_service">
+			<partyId>CME</partyId>
+		</party>
+		<party id="trade_source">
+			<partyId>MARKIT_WIRE</partyId>
+		</party>
+		<account id="account1">
+			<accountId accountIdScheme="clearing_firm_accounts">CMETEST01</accountId>
+			<servicingParty href="clearing_firm"/>
+		</account>
+		<reason>
+			<reasonCode>OCR</reasonCode>
+			<description>Counterparty reject deal</description>
+		</reason>
+	</clearingRefused>
+</cme:FpML>

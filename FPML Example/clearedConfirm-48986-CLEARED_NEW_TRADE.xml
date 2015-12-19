@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--This is the message a clearing firm will receive after a new trade from the platform is booked in their account--> 
+<cme:FpML xmlns="http://www.fpml.org/FpML-5/confirmation" xmlns:cme="http://www.cmegroup.com/otc-clearing/confirmation" xmlns:fpml="http://www.fpml.org/FpML-5/confirmation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cmegroup.com/otc-clearing/confirmation
+C:\FpML\CLAIMC~1\cme-conf-ext-1-2.xsd">
+    <clearingConfirmed fpmlVersion="5-0">
+        <header>
+            <messageId messageIdScheme="cme_message_id">66648986</messageId>
+            <sentBy messageAddressScheme="cme_clearingorg_id">CME</sentBy>
+            <sendTo messageAddressScheme="cme_firm_id">666</sendTo>
+            <sendTo messageAddressScheme="cme_exchange_id">CME</sendTo>
+            <creationTimestamp>2010-06-25T23:59:59-05:00</creationTimestamp>
+        </header>
+        <trade>
+            <tradeHeader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cme:CMETradeHeader">
+                <partyTradeIdentifier>
+                    <partyReference href="clearing_service"/>
+                    <tradeId tradeIdScheme="cme_trade_id">48986</tradeId>
+                    <tradeId tradeIdScheme="client_trade_id">CLIENT-101A</tradeId>
+                    <tradeId tradeIdScheme="platform_trade_id">PLATFORM-101</tradeId>
+                </partyTradeIdentifier>
+                <partyTradeInformation>
+                    <partyReference href="clearing_firm"/>
+                    <accountReference href="account1"/>
+                    <relatedParty>
+                        <partyReference href="trade_source"/>
+                        <role>InputSource</role>
+                    </relatedParty>
+                    <category categoryScheme="cme_origin_code">HOUS</category>
+                </partyTradeInformation>
+                <tradeDate>2010-06-25</tradeDate>
+                <clearedDate>2010-06-25</clearedDate>
+                <cme:originatingEvent>NEW_TRADE</cme:originatingEvent>
+                <cme:status>CLEARED</cme:status>
+            </tradeHeader>
+            <swap>
+                <productId productIdScheme="http://cmegroup.com/code/product_id">USD3L1</productId>
+                <swapStream id="fixedLeg">
+                    <payerPartyReference href="clearing_firm"/>
+                    <payerAccountReference href="account1"/>
+                    <receiverPartyReference href="clearing_service"/>
+                    <calculationPeriodDates id="fixedCalcPeriodDates">
+                        <effectiveDate>
+                            <unadjustedDate>2010-06-29</unadjustedDate>
+                            <dateAdjustments>
+<businessDayConvention>NONE</businessDayConvention>
+                            </dateAdjustments>
+                        </effectiveDate>
+                        <terminationDate>
+                            <unadjustedDate>2012-06-29</unadjustedDate>
+                            <dateAdjustments>
+<businessDayConvention>MODFOLLOWING</businessDayConvention>
+<businessCenters id="fixedPrimaryBusinessCenters">
+    <businessCenter>GBLO</businessCenter>
+    <businessCenter>USNY</businessCenter>
+</businessCenters>
+                            </dateAdjustments>
+                        </terminationDate>
+                        <calculationPeriodDatesAdjustments>
+                            <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                            <businessCentersReference href="fixedPrimaryBusinessCenters"/>
+                        </calculationPeriodDatesAdjustments>
+                        <calculationPeriodFrequency>
+                            <periodMultiplier>6</periodMultiplier>
+                            <period>M</period>
+                            <rollConvention>29</rollConvention>
+                        </calculationPeriodFrequency>
+                    </calculationPeriodDates>
+                    <paymentDates>
+                        <calculationPeriodDatesReference href="fixedCalcPeriodDates"/>
+                        <paymentFrequency>
+                            <periodMultiplier>6</periodMultiplier>
+                            <period>M</period>
+                        </paymentFrequency>
+                        <payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+                        <paymentDatesAdjustments>
+                            <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                            <businessCentersReference href="fixedPrimaryBusinessCenters"/>
+                        </paymentDatesAdjustments>
+                    </paymentDates>
+                    <calculationPeriodAmount>
+                        <calculation>
+                            <notionalSchedule>
+<notionalStepSchedule>
+    <initialValue>30000000</initialValue>
+    <currency>USD</currency>
+</notionalStepSchedule>
+                            </notionalSchedule>
+                            <fixedRateSchedule>
+<initialValue>0.015</initialValue>
+                            </fixedRateSchedule>
+                            <dayCountFraction>30/360</dayCountFraction>
+                        </calculation>
+                    </calculationPeriodAmount>
+                    <cashflows>
+                        <cashflowsMatchParameters>true</cashflowsMatchParameters>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2010-12-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2010-06-29</adjustedStartDate>
+<adjustedEndDate>2010-12-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<fixedRate>0.015</fixedRate>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2011-06-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2010-12-29</adjustedStartDate>
+<adjustedEndDate>2011-06-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<fixedRate>0.015</fixedRate>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2011-12-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2011-06-29</adjustedStartDate>
+<adjustedEndDate>2011-12-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<fixedRate>0.015</fixedRate>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2012-06-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2011-12-29</adjustedStartDate>
+<adjustedEndDate>2012-06-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<fixedRate>0.015</fixedRate>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                    </cashflows>
+                </swapStream>
+                <swapStream id="floatLeg">
+                    <payerPartyReference href="clearing_service"/>
+                    <receiverPartyReference href="clearing_firm"/>
+                    <receiverAccountReference href="account1"/>
+                    <calculationPeriodDates id="floatingCalcPeriodDates">
+                        <effectiveDate>
+                            <unadjustedDate>2010-06-29</unadjustedDate>
+                            <dateAdjustments>
+<businessDayConvention>NONE</businessDayConvention>
+                            </dateAdjustments>
+                        </effectiveDate>
+                        <terminationDate>
+                            <unadjustedDate>2012-06-29</unadjustedDate>
+                            <dateAdjustments>
+<businessDayConvention>MODFOLLOWING</businessDayConvention>
+<businessCenters id="floatPrimaryBusinessCenters">
+    <businessCenter>GBLO</businessCenter>
+    <businessCenter>USNY</businessCenter>
+</businessCenters>
+                            </dateAdjustments>
+                        </terminationDate>
+                        <calculationPeriodDatesAdjustments>
+                            <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                            <businessCentersReference href="floatPrimaryBusinessCenters"/>
+                        </calculationPeriodDatesAdjustments>
+                        <calculationPeriodFrequency>
+                            <periodMultiplier>3</periodMultiplier>
+                            <period>M</period>
+                            <rollConvention>29</rollConvention>
+                        </calculationPeriodFrequency>
+                    </calculationPeriodDates>
+                    <paymentDates>
+                        <calculationPeriodDatesReference href="floatingCalcPeriodDates"/>
+                        <paymentFrequency>
+                            <periodMultiplier>3</periodMultiplier>
+                            <period>M</period>
+                        </paymentFrequency>
+                        <payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+                        <paymentDatesAdjustments>
+                            <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                            <businessCentersReference href="floatPrimaryBusinessCenters"/>
+                        </paymentDatesAdjustments>
+                    </paymentDates>
+                    <resetDates id="floatingLegResetDates">
+                        <calculationPeriodDatesReference href="floatingCalcPeriodDates"/>
+                        <resetRelativeTo>CalculationPeriodStartDate</resetRelativeTo>
+                        <fixingDates>
+                            <periodMultiplier>-2</periodMultiplier>
+                            <period>D</period>
+                            <dayType>Business</dayType>
+                            <businessDayConvention>PRECEDING</businessDayConvention>
+                            <businessCenters id="resetPrimaryBusinessCenters">
+<businessCenter>GBLO</businessCenter>
+                            </businessCenters>
+                            <dateRelativeTo href="floatingLegResetDates"/>
+                        </fixingDates>
+                        <resetFrequency>
+                            <periodMultiplier>3</periodMultiplier>
+                            <period>M</period>
+                        </resetFrequency>
+                        <resetDatesAdjustments>
+                            <businessDayConvention>PRECEDING</businessDayConvention>
+                            <businessCentersReference href="floatPrimaryBusinessCenters"/>
+                        </resetDatesAdjustments>
+                    </resetDates>
+                    <calculationPeriodAmount>
+                        <calculation>
+                            <notionalSchedule>
+<notionalStepSchedule>
+    <initialValue>30000000</initialValue>
+    <currency>USD</currency>
+</notionalStepSchedule>
+                            </notionalSchedule>
+                            <floatingRateCalculation>
+<floatingRateIndex>USD-LIBOR-BBA</floatingRateIndex>
+<indexTenor>
+    <periodMultiplier>3</periodMultiplier>
+    <period>M</period>
+</indexTenor>
+                            </floatingRateCalculation>
+                            <dayCountFraction>ACT/360</dayCountFraction>
+                        </calculation>
+                    </calculationPeriodAmount>
+                    <cashflows>
+                        <cashflowsMatchParameters>true</cashflowsMatchParameters>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2010-09-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2010-06-29</adjustedStartDate>
+<adjustedEndDate>2010-09-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2010-06-25</adjustedFixingDate>
+        <observedRate>0.0053469</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2010-12-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2010-09-29</adjustedStartDate>
+<adjustedEndDate>2010-12-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2010-09-27</adjustedFixingDate>
+        <observedRate>0.0</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2011-03-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2010-12-29</adjustedStartDate>
+<adjustedEndDate>2011-03-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2010-12-23</adjustedFixingDate>
+        <observedRate>0.0</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2011-06-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2011-03-29</adjustedStartDate>
+<adjustedEndDate>2011-06-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2011-03-25</adjustedFixingDate>
+        <observedRate>0.0</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2011-09-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2011-06-29</adjustedStartDate>
+<adjustedEndDate>2011-09-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2011-06-27</adjustedFixingDate>
+        <observedRate>0.0</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2011-12-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2011-09-29</adjustedStartDate>
+<adjustedEndDate>2011-12-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2011-09-27</adjustedFixingDate>
+        <observedRate>0.0</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2012-03-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2011-12-29</adjustedStartDate>
+<adjustedEndDate>2012-03-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2011-12-23</adjustedFixingDate>
+        <observedRate>0.0</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                        <paymentCalculationPeriod>
+                            <adjustedPaymentDate>2012-06-29</adjustedPaymentDate>
+                            <calculationPeriod>
+<adjustedStartDate>2012-03-29</adjustedStartDate>
+<adjustedEndDate>2012-06-29</adjustedEndDate>
+<notionalAmount>30000000</notionalAmount>
+<floatingRateDefinition>
+    <rateObservation>
+        <adjustedFixingDate>2012-03-27</adjustedFixingDate>
+        <observedRate>0.0</observedRate>
+    </rateObservation>
+</floatingRateDefinition>
+                            </calculationPeriod>
+                        </paymentCalculationPeriod>
+                    </cashflows>
+                </swapStream>
+            </swap>
+        </trade>
+        <party id="clearing_firm">
+            <partyId partyIdScheme="clearing_member_firms">666</partyId>
+        </party>
+        <party id="clearing_service">
+            <partyId>CME</partyId>
+        </party>
+        <party id="trade_source">
+            <partyId>CME_TRADE_REPORT</partyId>
+        </party>
+        <account id="account1">
+            <accountId accountIdScheme="clearing_firm_accounts">666A</accountId>
+            <servicingParty href="clearing_firm"/>
+        </account>
+    </clearingConfirmed>
+</cme:FpML>
