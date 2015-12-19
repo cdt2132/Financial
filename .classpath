@@ -15,5 +15,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.12.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-jdk14-1.7.12.jar"/>
 	<classpathentry kind="lib" path="lib/jms.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-all-5.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
