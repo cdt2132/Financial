@@ -8,7 +8,6 @@
 
 import java.util.Date;
 
-
 public class EOD implements Runnable {
 
 	public void run() {
@@ -34,35 +33,8 @@ public class EOD implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			// set flags to correct current date
 			DatabaseManager.getInstance().setFlags(TradeCapture.CURRENT_DATE);
-
-			/*
-			System.out.println("Current_Date:"+TradeCapture.CURRENT_DATE);
-			System.out.println("Next Business Day:"+ TradeCapture.nextBusinessDay());
-			*/
-
 		}
-
 	}
-	
-	public static void TestRollDate() {
-		
-		// Test December orders
-		TradeCapture.CURRENT_DATE = TradeCapture.getThirdBeforeEOM(12, 2015);
-		
-		// Generate report for pre-date roll
-		DatabaseManager.getInstance().MaturingTodayTrades(".");
-		
-		// Roll the date
-		TradeCapture.CURRENT_DATE = TradeCapture.nextBusinessDay();
-		System.out.println("ROLLED THE DATE TO: " + TradeCapture.CURRENT_DATE.toString());
-		
-		// flag matured orders and swaps
-		DatabaseManager.getInstance().setFlags(TradeCapture.CURRENT_DATE);
-		
-		// Generate report for post-date roll (should have no trades..) 
-		DatabaseManager.getInstance().MaturingTodayTrades(".");
-		
-	}
-
 }

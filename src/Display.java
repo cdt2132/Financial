@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.awt.GridLayout;
+
+import javax.jms.JMSException;
 import javax.swing.*;
 import java.util.Date;
 
@@ -24,9 +26,15 @@ public class Display implements Runnable {
 
 		// DatabaseManager used to query MySQL database
 		final DatabaseManager db = DatabaseManager.getInstance();
+		
+
+		SwapExchange swapExchange = new SwapExchange();
+		SwapClient swapClient = new SwapClient();
+	
+		
 		int initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-				new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" }, "default");
+				new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future's Trade" }, "default");
 		while(initial != 0){
 		if (initial == 1) {
 			JPanel report = new JPanel(new GridLayout(0, 1));
@@ -114,7 +122,7 @@ public class Display implements Runnable {
 			}
 			initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-					new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" },
+					new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future's Trade" },
 					"default");
 		} else if (initial == 3) {
 
@@ -175,7 +183,7 @@ public class Display implements Runnable {
 				trader.setText("");
 				initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-						new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" },
+						new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future " },
 						"default");
 			}
 			if (result == JOptionPane.OK_OPTION) {
@@ -241,7 +249,7 @@ public class Display implements Runnable {
 						trader.setText("");
 						initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 								JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-								new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" },
+								new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future " },
 								"default");
 					}
 				}
@@ -324,7 +332,7 @@ public class Display implements Runnable {
 				trader.setText("");
 				initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-						new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" },
+						new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future's Trade" },
 						"default");
 			}
 			
@@ -385,6 +393,17 @@ public class Display implements Runnable {
 						/* Creating a swap object */ 
 						Swap o = new Swap(sd, sm, sy, td, tm, ty, r, s, fr, whoFloat.getSelectedItem().toString(),whoFix.getSelectedItem().toString(),t);
 						o.printSwap();
+						String FPML = o.createFpMLMessage();
+						
+						try {
+							
+							swapExchange.RequestConsent(FPML);
+						} catch (JMSException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						
 						/*try {
 							o.sendOrdertoExchange();
 						} catch (Throwable e1) {
@@ -399,7 +418,7 @@ public class Display implements Runnable {
 						trader.setText("");
 						initial = JOptionPane.showOptionDialog(null, "Welcome to Trade Capture", "Feedback",
 								JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-								new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future or Option Trade" },
+								new String[] { "Cancel", "Produce a Report", "Record a Swap", "Record a Future's Trade" },
 								"default");
 								
 					}

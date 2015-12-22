@@ -4,17 +4,37 @@
 *@version 1 Build October 2015
 */ 
 
+import java.util.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import quickfix.ConfigError;
 
+
 public class TestClass {	
 	
+	/**
+	 * Main testing function
+	 * @param args
+	 */
 	public static void main(String[] args){
 		
+		System.out.println("Starting Tests...");
 		
+		// Initiatlize tc application
+		TradeCapture tc = new TradeCapture();
+		
+		try {
+			TradeCapture.formatDates();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Initialized Application");
+
 		DatabaseManager db = DatabaseManager.getInstance();
-		db.clearTrades();
+		db.clearTradesandSwaps();
+		System.out.println("Cleared trades and swaps");
 		
 		Order o1 = new Order("HH",11,2015,20,Market.genMarketData(80.0), 1,0,1);
 		Order o2 = new Order("HH",11,2015,25,Market.genMarketData(80.0), 1,0,1);
@@ -40,18 +60,17 @@ public class TestClass {
 		Order o19 = new Order("LN",12,2015,40,Market.genMarketData(100.0), -1,0,3);
 		Order o20 = new Order("LN",12,2015,37,Market.genMarketData(100.0), -1,0,1);
 
-		Swap s0 = new Swap(1, 1, 2015, 28, 12, 2015, .00, .005, .115, "JPM", "UBS", 1);
-		Swap s1 = new Swap(1, 1, 2015, 28, 12, 2015, .01, .005, .95, "JPM", "UBS", 2);
-		Swap s2 = new Swap(1, 1, 2015, 28, 12, 2015, .02, .005, .85, "JPM", "UBS", 3);
-		Swap s3 = new Swap(1, 1, 2015, 28, 12, 2015, .03, .005, .75, "JPM", "UBS", 4);
-		Swap s4 = new Swap(1, 1, 2015, 28, 12, 2015, .04, .005, .65, "JPM", "UBS", 5);
+		Swap s0 = new Swap(1, 1, 2015, 28, 12, 2015, .00, .005, .115, "Me", "CME", 1);
+		Swap s1 = new Swap(1, 1, 2015, 28, 12, 2015, .01, .005, .95, "Me", "CME", 2);
+		Swap s2 = new Swap(1, 1, 2015, 28, 12, 2015, .02, .005, .85, "Me", "CME", 3);
+		Swap s3 = new Swap(1, 1, 2015, 28, 12, 2015, .03, .005, .75, "Me", "CME", 4);
+		Swap s4 = new Swap(1, 1, 2015, 28, 12, 2015, .04, .005, .65, "Me", "CME", 5);
 		
-		Swap s5 = new Swap(1, 1, 2015, 28, 12, 2015, .05, .005, .55, "JPM", "UBS", 6);	
-		Swap s6 = new Swap(1, 1, 2015, 28, 12, 2015, .06, .005, .45, "JPM", "UBS", 7);
-		Swap s7 = new Swap(1, 1, 2015, 28, 12, 2015, .07, .005, .35, "JPM", "UBS", 8);
-		Swap s8 = new Swap(1, 1, 2015, 28, 12, 2015, .08, .005, .25, "JPM", "UBS", 9);
-		Swap s9 = new Swap(1, 1, 2015, 28, 12, 2015, .09, .005, .15, "JPM", "UBS", 10);
-		
+		Swap s5 = new Swap(1, 1, 2015, 28, 12, 2015, .05, .005, .55, "LCH", "Me", 1);	
+		Swap s6 = new Swap(1, 1, 2015, 28, 12, 2015, .06, .005, .45, "LCH", "Me", 2);
+		Swap s7 = new Swap(1, 1, 2015, 28, 12, 2015, .07, .005, .35, "LCH", "Me", 3);
+		Swap s8 = new Swap(1, 1, 2015, 28, 12, 2015, .08, .005, .25, "LCH", "Me", 4);
+		Swap s9 = new Swap(1, 1, 2015, 28, 12, 2015, .09, .005, .15, "LCH", "Me", 5);
 		
 		
 		db.insertOrder(o1);
@@ -78,22 +97,58 @@ public class TestClass {
 		db.insertOrder(o19);
 		db.insertOrder(o20);
 		
+		db.insertSwap(s0);
+		db.insertSwap(s1);
+		db.insertSwap(s2);
+		db.insertSwap(s3);
+		db.insertSwap(s4);
 		
-		db.outputTrades("./");
-		db.outputAggregate("./");
-		db.outputPnL("./");
-	}
+		db.insertSwap(s5);
+		db.insertSwap(s6);
+		db.insertSwap(s7);
+		db.insertSwap(s8);
+		db.insertSwap(s9);
+		System.out.println("Inserted orders and swaps");
 	
-	public static void test(String[] args){
+		/* Test Reports */
 		
+		System.out.println("Testing reports...");
+		System.out.println("Generating reports...");
+		db.outputTrades(".");
+		db.outputAggregate(".");
+		db.outputPnL(".");
+		db.swapAllTrades(".");
+		db.swapAggregate(".");
+		db.MaturingTodayTrades(".");
 	
-		/* Start application */
-		TradeCapture tc = new TradeCapture();
-		
 		/* UNIT TESTS */
 		
-		System.out.println("Starting Tests...");
 		
+		// Rolling Date
+		TradeCapture.CURRENT_DATE = TradeCapture.getThirdBeforeEOM(12, 2015);
+				
+		// Generate report for pre-date roll
+		DatabaseManager.getInstance().MaturingTodayTrades(".");
+				
+		// Roll the date
+		TradeCapture.CURRENT_DATE = TradeCapture.nextBusinessDay();
+		System.out.println("ROLLED THE DATE TO: " + TradeCapture.CURRENT_DATE.toString());
+				
+		// flag matured orders and swaps
+		DatabaseManager.getInstance().setFlags(TradeCapture.CURRENT_DATE);
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		// Generate report for post-date roll (should have no trades..) 
+		DatabaseManager.getInstance().MaturingTodayTrades(".");
+			
+		// reset the date
+		TradeCapture.CURRENT_DATE = new Date();
 		
 		/* Test Display.java */
 		System.out.println("Testing Display...");
@@ -161,17 +216,7 @@ public class TestClass {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		DatabaseManager db = DatabaseManager.getInstance();
-		
-		/* Test Reports */
-		
-		System.out.println("Testing reports...");
-		System.out.println("Generating reports...");
-		db.outputTrades("./");
-		db.outputAggregate("./");
-		db.outputPnL("./");
-		
+
 		System.out.println("Reports generated successfully");
 		System.out.println("Finished testing");
 		System.exit(0);

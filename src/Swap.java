@@ -9,6 +9,24 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import java.io.StringWriter;
 
 public class Swap {
 	/** Start day of swap*/
@@ -74,7 +92,7 @@ public class Swap {
 	/**
 	 * Print swap trade
 	 */
-	void printSwap() {
+	public void printSwap() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		System.out.println(dateFormat.format(date));
 		System.out.println(startDay + " "
@@ -91,7 +109,60 @@ public class Swap {
 				 + trader);
 	}
 	
+	/**
+	 * Generate FpML message for swap trade
+	 * Uses example from www.mkyong.com
+	 * @return FpML Message
+	 */
+	public String createFpMLMessage() {
+		
+		try {
+			
+			String filepath ="./bin/RequestConsent.xml";
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.parse(filepath);
+			
+			Node startDate = doc.getElementsByTagName("startDate").item(0);
+			if(startDate != null) startDate.setTextContent(startDay + "/" + startMonth + "/" + startYear);
+			
+			Node terminationDate = doc.getElementsByTagName("terminationDate").item(0);
+			if (terminationDate != null) terminationDate.setTextContent(termDay + "/" + termMonth + "/" + termYear);
+			
+			Node whoFloat = doc.getElementsByTagName("whoFloat").item(0);
+			if (whoFloat != null) whoFloat.setTextContent(PayerFloat);
+			
+			Node whoFixed = doc.getElementsByTagName("whoFixed").item(0);
+			if (whoFixed != null) whoFixed.setTextContent(PayerFixed);
+			
+			Node floatingRate = doc.getElementsByTagName("floatingRate").item(0);
+			if (floatingRate != null) floatingRate.setTextContent(Double.toString(floatRate));
+			
+			Node floatingRateSpread = doc.getElementsByTagName("floatingRateSpread").item(0);
+			if (floatingRateSpread != null) floatingRateSpread.setTextContent(Double.toString(floatRateSpread));
+			
+			Node fRate = doc.getElementsByTagName("fixedRate").item(0);
+			if (fRate != null) fRate.setTextContent(Double.toString(fixedRate));
 	
+			StringWriter sw = new StringWriter();
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer transformer = tf.newTransformer();
+		    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+	        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
+	        transformer.transform(new DOMSource(doc), new StreamResult(sw));
+	        System.out.println(sw.toString());
+	        return sw.toString();
+	        
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "";
+		
+	}
 	
 }

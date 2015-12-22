@@ -10,8 +10,28 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-
+import java.util.Calendar;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import java.io.StringWriter;
 import org.apache.activemq.ActiveMQConnectionFactory;
+
+
 
 public class SwapClient implements MessageListener {
 	
@@ -56,6 +76,7 @@ public class SwapClient implements MessageListener {
 
 	public void onMessage(javax.jms.Message message) {
 		try {
+			DOMParser parser = new DOMParser();
 			
 			System.out.println("From Exchange:" + ((TextMessage) message).getText());
 			if (message instanceof TextMessage) {
@@ -63,21 +84,24 @@ public class SwapClient implements MessageListener {
 				String messageText = txtMsg.getText();
 				
 				//Accepting all request consent from exchange
-				if (messageText == "Request Consent"){
+				if (messageText.contains("CONSENTFIELD")){
 					TextMessage response = this.session.createTextMessage();
-					response.setText("Consent!");
+					response.setText(messageText);
 					this.replyProducer.send(message.getJMSReplyTo(), response);
 				}
 				
 				//Accepting all request consent from exchange
-				if (messageText == "Clearing Confirm"){
-					//insert trade into database
+				if (messageText.contains("Clearing Confirm")){
+					parser.parse(messageText);
+					Document doc = parser.getDocument();
+					
 					
 				}
 			}	
 			
-		} catch (JMSException e) {
+		} catch (Exception e) {
 			// Handle the exception appropriately
+			e.printStackTrace();
 		}
 	}
 }

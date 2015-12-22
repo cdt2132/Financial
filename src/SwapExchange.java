@@ -12,7 +12,25 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-
+import java.util.Calendar;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import java.io.StringWriter;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class SwapExchange implements MessageListener {
@@ -28,7 +46,7 @@ public class SwapExchange implements MessageListener {
 		ackMode = Session.AUTO_ACKNOWLEDGE;
 	}
 	
-	public void RequestConsent() throws JMSException{
+	public void RequestConsent(String fpml) throws JMSException{
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");
 		Connection connection;
 		connection = connectionFactory.createConnection();
@@ -43,13 +61,13 @@ public class SwapExchange implements MessageListener {
         responseConsumer.setMessageListener(this);
  
         TextMessage txtMessage = session.createTextMessage();
-        txtMessage.setText("Request Consent");
+        txtMessage.setText(fpml);
         txtMessage.setJMSReplyTo(tempDest);
         this.producer.send(txtMessage);
 
 	}
 	
-	public void ClearingConfirm() throws JMSException{
+	public void ClearingConfirm(String messageText) throws JMSException{
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");
 		Connection connection;
 		connection = connectionFactory.createConnection();
@@ -64,12 +82,13 @@ public class SwapExchange implements MessageListener {
         responseConsumer.setMessageListener(this);
  
         TextMessage txtMessage = session.createTextMessage();
-        txtMessage.setText("Clearing Confirm");
+        messageText.replace("CONSENTFIELD", "Clearing Confirm");
+        txtMessage.setText(messageText);
         txtMessage.setJMSReplyTo(tempDest);
         this.producer.send(txtMessage);
 
 	}
-	public void ClearingReject() throws JMSException{
+	public void ClearingReject(String messageText) throws JMSException{
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost");
 		Connection connection;
 		connection = connectionFactory.createConnection();
@@ -84,7 +103,8 @@ public class SwapExchange implements MessageListener {
         responseConsumer.setMessageListener(this);
  
         TextMessage txtMessage = session.createTextMessage();
-        txtMessage.setText("Clearing Reject");
+        messageText.replace("CONSENTFIELD", "Clearing Reject");
+        txtMessage.setText(messageText);
         txtMessage.setJMSReplyTo(tempDest);
         this.producer.send(txtMessage);
 
@@ -105,11 +125,11 @@ public class SwapExchange implements MessageListener {
 			
 			if (rand.nextInt(2) == 0){
 				//Confirm Clearing
-				ClearingConfirm();
+				ClearingConfirm(messageText);
 				
 			}else{
 				//reject clearing
-				ClearingReject();
+				ClearingReject(messageText);
 			}
 		}catch(JMSException e){
 			

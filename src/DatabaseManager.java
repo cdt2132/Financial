@@ -151,7 +151,7 @@ public class DatabaseManager {
 		String strSQL = "INSERT INTO Trades(" + "symbol, " + "ordertime, " + "expMonth, " + "expYear, " + "lot, "
 				+ "price, " + "buy, " + "trader, " + "maturity) " + "VALUES ( " + "'" + o.symbol + "', " + "'"
 				+ dateFormat.format(o.date) + "', " + o.expMonth + ", " + o.expYear + ", " + o.lots + ", " + o.price
-				+ ", " + o.buySell + ", " + o.trader + ", " + dateFormat.format(date) + ")";
+				+ ", " + o.buySell + ", " + o.trader + ", " + "'" + dateFormat.format(date) + "')";
 		System.out.println(strSQL);
 		if (updateSql(strSQL))
 			return true;
@@ -211,13 +211,13 @@ public class DatabaseManager {
 			System.out.println(filename);
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			ResultSet rs = getResult("SELECT * FROM Trades");
-			writer.println("Symbol, orderTime, expMonth, expYear, lot, price, buy, trader");
+			writer.println("Symbol, orderTime, expMonth, expYear, lot, price, buy, trader, isMatured");
 
 			// print all rows in Trades table
 			while (rs.next()) {
 				writer.println(rs.getString("symbol") + ", " + rs.getString("ordertime") + ", "
 						+ rs.getString("expMonth") + ", " + rs.getString("expYear") + ", " + rs.getString("lot") + ", "
-						+ rs.getString("price") + ", " + rs.getString("buy") + ", " + rs.getString("trader") + ", ");
+						+ rs.getString("price") + ", " + rs.getString("buy") + ", " + rs.getString("trader") + ", " + rs.getString("isMatured") + ", ");
 			}
 			writer.close();
 		} catch (SQLException sqle) {
@@ -437,13 +437,13 @@ public class DatabaseManager {
 			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			writer.println("FUTURES");
 			ResultSet rs = getResult("SELECT * FROM Trades WHERE maturity ='" + sdf.format(TradeCapture.CURRENT_DATE) + "';");
-			writer.println("Symbol, orderTime, expMonth, expYear, lot, price, buy, trader");
+			writer.println("Symbol, orderTime, expMonth, expYear, lot, price, buy, trader, isMatured");
 
 			// print all rows in result set
 			while (rs.next()) {
 				writer.println(rs.getString("symbol") + ", " + rs.getString("ordertime") + ", "
 						+ rs.getString("expMonth") + ", " + rs.getString("expYear") + ", " + rs.getString("lot") + ", "
-						+ rs.getString("price") + ", " + rs.getString("buy") + ", " + rs.getString("trader") + ", ");
+						+ rs.getString("price") + ", " + rs.getString("buy") + ", " + rs.getString("trader") + ", "+ rs.getString("isMatured") + ", ");
 			}
 
 			rs = getResult("SELECT * FROM Swaps WHERE termdate ='" + sdf.format(TradeCapture.CURRENT_DATE) + "';");
@@ -484,10 +484,10 @@ public class DatabaseManager {
 
 			ResultSet rs = getResult("SELECT * FROM Swaps ORDER BY trader;");
 			
-			writer.println("startdate, termdate, fixedrate,floatrate,floatratespread,swaptime,payerfloat,payerfixed,trader,isMatured");
+			writer.println("swaptime, startdate, termdate, fixedrate,floatrate,floatratespread,swaptime,payerfloat,payerfixed,trader,isMatured");
 			// print all rows in Trades table
 			while (rs.next()) {
-				writer.println(rs.getString("startdate") + ", " + rs.getString("termdate") + ", "
+				writer.println(rs.getString("swaptime") + ", " + rs.getString("startdate") + ", " + rs.getString("termdate") + ", "
 						+ rs.getString("fixedrate") + ", " + rs.getString("floatrate") + ", " + rs.getString("floatratespread")
 						+ ", " + rs.getString("swaptime") + ", " + rs.getString("payerfloat") + ", "
 						+ rs.getString("payerfixed") + ", " + rs.getString("trader")+", " + rs.getString("isMatured"));
@@ -515,16 +515,20 @@ public class DatabaseManager {
 		strSQL = "UPDATE Swaps SET ismatured = 0 WHERE termdate >= '"+sdf.format(curr)+"'";
 		updateSql(strSQL);
 		
-		strSQL = "UPDATE Orders SET ismatured = 1 WHERE maturity < '" + sdf.format(curr) + "'";
+		strSQL = "UPDATE Trades SET ismatured = 1 WHERE maturity < '" + sdf.format(curr) + "'";
 		updateSql(strSQL);
-		strSQL = "UPDATE Orders SET ismatured = 0 WHERE maturity >= '"+sdf.format(curr)+"'";
+		strSQL = "UPDATE Trades SET ismatured = 0 WHERE maturity >= '"+sdf.format(curr)+"'";
 		updateSql(strSQL);
 	}
 
-	public void clearTrades() {
-		String strSQL = "DELETE FROM Orders;";
-		if (updateSql(strSQL))
-			System.out.println("DELETED ALL ORDERS");
+	/**
+	 * Clear Trades and Swaps table (for testing)
+	 */
+	public void clearTradesandSwaps() {
+		String strSQL = "DELETE FROM Trades;";
+		updateSql(strSQL);
+		strSQL = "DELETE FROM Swaps;";
+		updateSql(strSQL);
 	}
 	
 	/**

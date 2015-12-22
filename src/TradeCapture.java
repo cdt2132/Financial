@@ -16,7 +16,10 @@ public class TradeCapture {
 	public static Date CURRENT_DATE;   // system-wide parameter Current date
 	public static ArrayList<Date> holidays;  // A list of holiday dates
 	
-	// Main function
+	/**
+	 * Main function of application
+	 */
+
 	public static void main(String[] args) throws SQLException, ParseException {
 		formatDates();
 		
