@@ -393,6 +393,7 @@ public class Display implements Runnable {
 						/* Creating a swap object */ 
 						Swap o = new Swap(sd, sm, sy, td, tm, ty, r, s, fr, whoFloat.getSelectedItem().toString(),whoFix.getSelectedItem().toString(),t);
 						o.printSwap();
+						
 						String FPML = o.createFpMLMessage();
 						
 						try {
@@ -404,12 +405,6 @@ public class Display implements Runnable {
 						}
 
 						
-						/*try {
-							o.sendOrdertoExchange();
-						} catch (Throwable e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}*/
 						db.insertSwap(o);
 						// Resets GUI
 						rate.setText("");

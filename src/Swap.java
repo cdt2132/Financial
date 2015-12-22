@@ -123,11 +123,26 @@ public class Swap {
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(filepath);
 			
-			Node startDate = doc.getElementsByTagName("startDate").item(0);
-			if(startDate != null) startDate.setTextContent(startDay + "/" + startMonth + "/" + startYear);
+			Node t = doc.getElementsByTagName("trader").item(0);
+			if(t != null) t.setTextContent(Integer.toString(trader));
 			
-			Node terminationDate = doc.getElementsByTagName("terminationDate").item(0);
-			if (terminationDate != null) terminationDate.setTextContent(termDay + "/" + termMonth + "/" + termYear);
+			Node sd = doc.getElementsByTagName("startDay").item(0);
+			if(sd != null) sd.setTextContent(Integer.toString(startDay));
+			
+			Node sm = doc.getElementsByTagName("startMonth").item(0);
+			if(sm != null) sm.setTextContent(Integer.toString(startMonth));
+			
+			Node sy = doc.getElementsByTagName("startYear").item(0);
+			if(sy != null) sy.setTextContent(Integer.toString(startYear));
+			
+			Node td = doc.getElementsByTagName("terminationDay").item(0);
+			if (td != null) td.setTextContent(Integer.toString(termDay));
+			
+			Node tm = doc.getElementsByTagName("terminationMonth").item(0);
+			if (tm != null) tm.setTextContent(Integer.toString(termMonth));
+			
+			Node ty = doc.getElementsByTagName("terminationYear").item(0);
+			if (ty != null) ty.setTextContent(Integer.toString(termYear));
 			
 			Node whoFloat = doc.getElementsByTagName("whoFloat").item(0);
 			if (whoFloat != null) whoFloat.setTextContent(PayerFloat);

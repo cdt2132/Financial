@@ -28,6 +28,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+
 import java.io.StringWriter;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -95,6 +98,57 @@ public class SwapClient implements MessageListener {
 					parser.parse(messageText);
 					Document doc = parser.getDocument();
 					
+					int startDay;
+					int startMonth;
+					int startYear;
+
+					int termDay;
+					int termMonth;
+					int termYear;
+					
+					double floatRate;
+					double floatRateSpread;
+					double fixedRate;
+
+					String PayerFixed;
+					String PayerFloat;
+					int trader;
+					
+					Node t = doc.getElementsByTagName("trader").item(0);
+					if(t != null) trader = Integer.parseInt(t.getTextContent());
+					
+					Node sd = doc.getElementsByTagName("startDay").item(0);
+					if(sd != null) startDay = Integer.parseInt(sd.getTextContent());
+					
+					Node sm = doc.getElementsByTagName("startMonth").item(0);
+					if(sm != null) startMonth = Integer.parseInt(sm.getTextContent());
+					
+					Node sy = doc.getElementsByTagName("startYear").item(0);
+					if(sy != null) startYear = Integer.parseInt(sy.getTextContent());
+					
+					Node td = doc.getElementsByTagName("terminationDay").item(0);
+					if (td != null) termDay = Integer.parseInt(td.getTextContent());
+					
+					Node tm = doc.getElementsByTagName("terminationMonth").item(0);
+					if (tm != null) termMonth = Integer.parseInt(tm.getTextContent());
+					
+					Node ty = doc.getElementsByTagName("terminationYear").item(0);
+					if (ty != null) termYear = Integer.parseInt(ty.getTextContent());
+					
+					Node whoFloat = doc.getElementsByTagName("whoFloat").item(0);
+					if (whoFloat != null) PayerFloat = whoFloat.getTextContent();
+					
+					Node whoFixed = doc.getElementsByTagName("whoFixed").item(0);
+					if (whoFixed != null) PayerFixed = whoFixed.getTextContent();
+					
+					Node floatingRate = doc.getElementsByTagName("floatingRate").item(0);
+					if (floatingRate != null) floatRate = Double.parseDouble(floatingRate.getTextContent());
+					
+					Node floatingRateSpread = doc.getElementsByTagName("floatingRateSpread").item(0);
+					if (floatingRateSpread != null) floatRateSpread = Double.parseDouble(floatingRateSpread.getTextContent());
+					
+					Node fRate = doc.getElementsByTagName("fixedRate").item(0);
+					if (fRate != null) fixedRate = Double.parseDouble(fRate.getTextContent());
 					
 				}
 			}	
