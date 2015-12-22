@@ -13,6 +13,8 @@ import javax.jms.TextMessage;
 import java.util.Calendar;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,9 +29,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+
+
 
 import java.io.StringWriter;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -95,24 +100,24 @@ public class SwapClient implements MessageListener {
 				
 				//Accepting all request consent from exchange
 				if (messageText.contains("Clearing Confirm")){
-					parser.parse(messageText);
+					parser.parse(new InputSource (new StringReader(messageText)));
 					Document doc = parser.getDocument();
 					
-					int startDay;
-					int startMonth;
-					int startYear;
+					int startDay = 0;
+					int startMonth = 0;
+					int startYear = 0;
 
-					int termDay;
-					int termMonth;
-					int termYear;
+					int termDay = 0;
+					int termMonth = 0;
+					int termYear = 0;
 					
-					double floatRate;
-					double floatRateSpread;
-					double fixedRate;
+					double floatRate = 0;
+					double floatRateSpread = 0;
+					double fixedRate = 0;
 
-					String PayerFixed;
-					String PayerFloat;
-					int trader;
+					String PayerFixed = "";
+					String PayerFloat = "";
+					int trader = 0;
 					
 					Node t = doc.getElementsByTagName("trader").item(0);
 					if(t != null) trader = Integer.parseInt(t.getTextContent());
@@ -150,6 +155,10 @@ public class SwapClient implements MessageListener {
 					Node fRate = doc.getElementsByTagName("fixedRate").item(0);
 					if (fRate != null) fixedRate = Double.parseDouble(fRate.getTextContent());
 					
+					Swap s = new Swap(startDay, startMonth, startYear, termDay, termMonth, termYear, floatRate, floatRateSpread, fixedRate, PayerFloat, PayerFixed,trader);
+					s.printSwap();
+					DatabaseManager db = DatabaseManager.getInstance();
+					db.insertSwap(s);
 				}
 			}	
 			

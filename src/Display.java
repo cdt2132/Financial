@@ -392,7 +392,7 @@ public class Display implements Runnable {
 
 						/* Creating a swap object */ 
 						Swap o = new Swap(sd, sm, sy, td, tm, ty, r, s, fr, whoFloat.getSelectedItem().toString(),whoFix.getSelectedItem().toString(),t);
-						o.printSwap();
+						//o.printSwap();
 						
 						String FPML = o.createFpMLMessage();
 						
@@ -405,7 +405,6 @@ public class Display implements Runnable {
 						}
 
 						
-						db.insertSwap(o);
 						// Resets GUI
 						rate.setText("");
 						spread.setText("");

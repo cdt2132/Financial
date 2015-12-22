@@ -82,8 +82,9 @@ public class SwapExchange implements MessageListener {
         responseConsumer.setMessageListener(this);
  
         TextMessage txtMessage = session.createTextMessage();
-        messageText.replace("CONSENTFIELD", "Clearing Confirm");
-        txtMessage.setText(messageText);
+        String newMessage = messageText.replace("CONSENTFIELD", "Clearing Confirm");
+   
+        txtMessage.setText(newMessage);
         txtMessage.setJMSReplyTo(tempDest);
         this.producer.send(txtMessage);
 
@@ -103,8 +104,8 @@ public class SwapExchange implements MessageListener {
         responseConsumer.setMessageListener(this);
  
         TextMessage txtMessage = session.createTextMessage();
-        messageText.replace("CONSENTFIELD", "Clearing Reject");
-        txtMessage.setText(messageText);
+        String newMessage = messageText.replace("CONSENTFIELD", "Clearing Reject");
+        txtMessage.setText(newMessage);
         txtMessage.setJMSReplyTo(tempDest);
         this.producer.send(txtMessage);
 
@@ -122,6 +123,7 @@ public class SwapExchange implements MessageListener {
 			
 			//randomly reject or confirm clearing
 			Random rand = new Random();
+
 			
 			if (rand.nextInt(2) == 0){
 				//Confirm Clearing
@@ -131,6 +133,7 @@ public class SwapExchange implements MessageListener {
 				//reject clearing
 				ClearingReject(messageText);
 			}
+	
 		}catch(JMSException e){
 			
 		}
